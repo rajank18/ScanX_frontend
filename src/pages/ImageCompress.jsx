@@ -78,16 +78,10 @@ export default function ImageCompress() {
           <button
             onClick={handleCompress}
             disabled={isCompressing}
-            className="w-full px-4 py-2 bg-green-700 text-white rounded-md hover:bg-green-800 disabled:opacity-60"
+            className="w-full px-4 py-2 bg-blue-700 text-white rounded-md hover:bg-blue-800 disabled:opacity-60"
           >
-            {isCompressing ? "Compressing..." : "Compress"}
+            {isCompressing ? "Compressing..." : "Compress Image"}
           </button>
-        </div>
-      )}
-      {errorMessage && <p className="mt-2 text-sm text-red-400">{errorMessage}</p>}
-      {compressedBlobUrl && (
-        <div className="mt-6 flex flex-col items-center">
-          <h3 className="text-lg font-semibold mb-2">Compressed Image</h3>
           <img src={compressedBlobUrl} alt="compressed" className="w-64 h-auto rounded-md shadow-md mb-2 max-w-full" />
           {originalSize && compressedSize && reductionPercent && (
             <div className="text-sm text-left mt-2">

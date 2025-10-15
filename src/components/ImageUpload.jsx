@@ -4,10 +4,10 @@ export default function ImageUpload({ onImageSelect }) {
   const [preview, setPreview] = useState(null);
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setPreview(URL.createObjectURL(file));
-      onImageSelect(file);
+    const files = Array.from(e.target.files);
+    if (files.length) {
+      setPreview(URL.createObjectURL(files[0]));
+      onImageSelect(files);
     }
   };
 
@@ -18,17 +18,12 @@ export default function ImageUpload({ onImageSelect }) {
         <input
           type="file"
           accept="image/*"
+          multiple
           onChange={handleFileChange}
           className="hidden"
         />
       </label>
-      {preview && (
-        <img 
-          src={preview} 
-          alt="preview" 
-          className="w-full max-w-full h-auto rounded-md shadow-md max-h-64 object-contain" 
-        />
-      )}
+      {/* Removed large preview image */}
     </div>
   );
 }

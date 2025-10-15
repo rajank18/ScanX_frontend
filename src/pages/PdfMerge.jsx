@@ -173,13 +173,15 @@ export default function PdfMerge() {
           </SortableContext>
         </DndContext>
       )}
-      <button
-        onClick={handleMerge}
-        disabled={isMerging || pdfFiles.length < 2}
-        className="w-full px-4 py-2 bg-green-700 text-white rounded-md hover:bg-green-800 disabled:opacity-60 mb-2"
-      >
-        {isMerging ? "Merging..." : "Merge PDFs"}
-      </button>
+      {pdfFiles.length > 0 && (
+        <button
+          onClick={handleMerge}
+          disabled={isMerging || pdfFiles.length < 2}
+          className="w-full px-4 py-2 bg-blue-700 text-white rounded-md hover:bg-blue-800 disabled:opacity-60 mb-2"
+        >
+          {isMerging ? "Merging..." : "Merge PDFs"}
+        </button>
+      )}
       {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
       {mergedPdfUrl && (
         <a

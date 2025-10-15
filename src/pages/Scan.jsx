@@ -45,7 +45,7 @@ export default function Scan() {
           <button
             onClick={handleScan}
             disabled={isLoading}
-            className="w-full px-4 py-2 bg-green-700 text-white rounded-md hover:bg-green-800 disabled:opacity-60"
+            className="w-full px-4 py-2 bg-blue-700 text-white rounded-md hover:bg-blue-800 disabled:opacity-60"
           >
             {isLoading ? "Scanning..." : "Scan"}
           </button>
