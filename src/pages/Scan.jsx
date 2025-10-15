@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ImageUpload from "../components/ImageUpload";
+// ...existing code...
 import ScanPreview from "../components/ScanPreview";
 
 export default function Scan() {
@@ -39,7 +39,40 @@ export default function Scan() {
   return (
     <div className="w-full max-w-3xl mx-auto text-gray-100 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center">
       <h2 className="text-2xl md:text-3xl font-semibold mb-4">OCR Scan</h2>
-      <ImageUpload onImageSelect={setImage} />
+      <label className="block w-full mb-4 p-2 border border-dashed border-white/30 rounded-lg text-center cursor-pointer hover:bg-white/10">
+        <span className="text-white/80">Choose Image or Take Photo</span>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={e => {
+            const file = e.target.files[0];
+            if (file) setImage(file);
+          }}
+          className="hidden"
+        />
+      </label>
+      {image && (
+        <div className="flex flex-col md:flex-row gap-6 items-center justify-center mb-4">
+          <div className="flex flex-col items-center">
+            <span className="text-sm text-white/70 mb-1">Original</span>
+            <img
+              src={URL.createObjectURL(image)}
+              alt="preview"
+              className="w-50 max-w-xs h-auto rounded-md shadow-md object-contain"
+            />
+          </div>
+          {/* {scannedBlobUrl && format === "png" && (
+            <div className="flex flex-col items-center">
+              <span className="text-sm text-white/70 mb-1">Scanned</span>
+              <img
+                src={scannedBlobUrl}
+                alt="scanned"
+                className="w-full max-w-xs h-auto rounded-md shadow-md object-contain"
+              />
+            </div>
+          )} */}
+        </div>
+      )}
       {image && (
         <div className="flex flex-col gap-4 items-center mt-4">
           <button

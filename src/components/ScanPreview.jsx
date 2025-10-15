@@ -8,7 +8,7 @@ export default function ScanPreview({ scannedBlobUrl, format }) {
       <div className="flex flex-col items-center p-4">
         <h2 className="text-lg font-semibold mb-2">Scanned {isPdf ? "PDF" : "Image"}</h2>
         {!isPdf && (
-          <img src={scannedBlobUrl} alt="scanned" className="w-64 h-auto rounded-md shadow-md mb-2" />
+          <img src={scannedBlobUrl} alt="scanned" className="w-50 h-auto rounded-md shadow-md mb-2" />
         )}
         <a
           href={scannedBlobUrl}
