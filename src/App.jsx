@@ -55,7 +55,7 @@ function App() {
       </main>
 
       <footer className="border-t border-white/10 text-center text-xs text-white/50 py-4">
-        <div className="container-narrow">© {new Date().getFullYear()} ScanX</div>
+        <div className="container-narrow">Made By RAJAN</div>
       </footer>
     </div>
   );
