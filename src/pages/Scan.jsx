@@ -64,7 +64,10 @@ export default function Scan() {
         </select>
       </div>
       {errorMessage && <p className="mt-2 text-sm text-red-400">{errorMessage}</p>}
-      <ScanPreview scannedBlobUrl={scannedBlobUrl} format={format} />
+      {/* Always show ScanPreview for both PNG and PDF, but only show image preview for PNG inside ScanPreview */}
+      {scannedBlobUrl && (
+        <ScanPreview scannedBlobUrl={scannedBlobUrl} format={format} />
+      )}
       {isLoading && <div className="mt-2 text-green-400">Scanning...</div>}
       {!image && <p className="mt-2 text-white/70">Upload an image to scan.</p>}
     </div>
