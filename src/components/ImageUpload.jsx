@@ -7,7 +7,7 @@ export default function ImageUpload({ onImageSelect }) {
     const files = Array.from(e.target.files);
     if (files.length) {
       setPreview(URL.createObjectURL(files[0]));
-      onImageSelect(files);
+      onImageSelect(files[0]); // Pass only the first file
     }
   };
 
