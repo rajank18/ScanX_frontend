@@ -1,4 +1,5 @@
 import { useState } from "react";
+import logo from "./assets/logo.png";
 import { Outlet, Link } from "react-router-dom";
 import "./globals.css";
 
@@ -11,9 +12,14 @@ function App() {
 
   return (
     <div className="relative min-h-screen flex flex-col">
-      <header className="sticky top-0 z-20 border-b border-white/10 backdrop-blur supports-[backdrop-filter]:bg-black/30">
+      <header className="sticky top-0 z-20 border-b border-white/10 backdrop-blur supports-[backdrop-filter]:bg-black">
         <div className="container-narrow h-14 md:h-16 flex items-center justify-between">
-          <Link to="/" className="text-xl md:text-2xl font-bold tracking-tight">ScanX</Link>
+          <Link to="/" className="text-xl md:text-2xl font-bold tracking-tight flex ">
+          <div>
+            <img src={logo} className="inline w-max h-8 mr-2 mb-1" alt="ScanX Logo" />
+          </div>
+          <h1>ScanX</h1>
+          </Link>
 
           {/* Mobile menu button */}
           <button
@@ -28,7 +34,8 @@ function App() {
 
           {/* Desktop nav */}
           <nav className="hidden md:flex gap-3 text-sm md:text-base text-white/80">
-            <Link className="hover:text-white" to="/scan">OCR Scan</Link>
+            <Link className="hover:text-white" to="/convertors">Convertors</Link>
+            <Link className="hover:text-white" to="/scan">Scanner</Link>
             {/* <Link className="hover:text-white" to="/pdf-compress">PDF Compress</Link> */}
             <Link className="hover:text-white" to="/image-compress">Image Compress</Link>
             <Link className="hover:text-white" to="/merge-pdf">Merge PDFs</Link>
