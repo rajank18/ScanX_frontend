@@ -34,7 +34,7 @@ function App() {
 
           {/* Desktop nav */}
           <nav className="hidden md:flex gap-3 text-sm md:text-base text-white/80">
-            <Link className="hover:text-white" to="/convertors">Convertors</Link>
+            <Link className="hover:text-white" to="/convertor">Convertors</Link>
             <Link className="hover:text-white" to="/scan">Scanner</Link>
             {/* <Link className="hover:text-white" to="/pdf-compress">PDF Compress</Link> */}
             <Link className="hover:text-white" to="/image-compress">Image Compress</Link>
