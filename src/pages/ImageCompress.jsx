@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ImageUpload from "../components/ImageUpload";
+import SEO from "@/components/SEO";
 
 export default function ImageCompress() {
   const [image, setImage] = useState(null);
@@ -63,8 +64,15 @@ export default function ImageCompress() {
   const formatSize = (bytes) => (bytes / 1024).toFixed(2) + " KB";
 
   return (
-    <div className="w-full max-w-3xl mx-auto text-gray-100 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center">
-      <h2 className="text-2xl md:text-3xl font-semibold mb-4">Image Compression</h2>
+    <>
+      <SEO 
+        title="Free Image Compressor - Compress JPG & PNG Online"
+        description="Free online image compression tool. Reduce image file size without losing quality. Compress JPG and PNG images instantly in your browser. Fast and secure."
+        keywords="image compressor, compress jpg, compress png, reduce image size, optimize images, image optimization, scanx compress"
+        canonical="/image-compress"
+      />
+      <div className="w-full max-w-3xl mx-auto text-gray-100 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center">
+        <h2 className="text-2xl md:text-3xl font-semibold mb-4">Image Compression</h2>
       <ImageUpload onImageSelect={(file) => { 
         setImage(file); 
         setCompressedBlobUrl(null); 
@@ -120,6 +128,7 @@ export default function ImageCompress() {
       )}
       {isUploading && <div className="mt-2 text-green-400">Uploading...</div>}
       {!image && <p className="text-white/70">Upload a JPG/PNG image to compress.</p>}
-    </div>
+      </div>
+    </>
   );
 }

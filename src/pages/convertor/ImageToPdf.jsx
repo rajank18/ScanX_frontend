@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ImageUpload from "../../components/ImageUpload";
+import SEO from "@/components/SEO";
 import {
   DndContext,
   closestCenter,
@@ -121,8 +122,15 @@ export default function ImageToPdf() {
   }
 
   return (
-    <div className="w-full max-w-3xl mx-auto text-gray-100 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center">
-      <h2 className="text-2xl md:text-3xl font-semibold mb-4">Image to PDF</h2>
+    <>
+      <SEO 
+        title="Free Image to PDF Converter - Convert JPG, PNG to PDF Online"
+        description="Convert images to PDF online for free. Upload multiple images (JPG, PNG, JPEG) and combine them into a single PDF file. Drag and reorder images easily."
+        keywords="image to pdf, jpg to pdf, png to pdf, convert images to pdf, pictures to pdf, photos to pdf, online image converter"
+        canonical="/convertor/image-to-pdf"
+      />
+      <div className="w-full max-w-3xl mx-auto text-gray-100 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center">
+        <h2 className="text-2xl md:text-3xl font-semibold mb-4">Image to PDF</h2>
       <p className="text-white/70 mb-6">Upload one or more images (any format) to convert them into a single PDF file. Drag to reorder.</p>
   <ImageUpload onImageSelect={handleImageSelect} />
       {images.length > 0 && (
@@ -169,6 +177,7 @@ export default function ImageToPdf() {
         </div>
       )}
       {!images.length && <p className="mt-2 text-white/70">Upload images to start conversion.</p>}
-    </div>
+      </div>
+    </>
   );
 }

@@ -1,6 +1,7 @@
 import { useState } from "react";
 // ...existing code...
 import ScanPreview from "../components/ScanPreview";
+import SEO from "@/components/SEO";
 
 export default function Scan() {
   const [image, setImage] = useState(null);
@@ -37,8 +38,15 @@ export default function Scan() {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto text-gray-100 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center">
-      <h2 className="text-2xl md:text-3xl font-semibold mb-4">OCR Scan</h2>
+    <>
+      <SEO 
+        title="Free OCR Scanner - Convert Images to PDF or PNG"
+        description="Free online OCR scanner tool. Upload images and convert them to PDF or PNG format with optical character recognition. Fast, secure, and works in your browser."
+        keywords="ocr scanner, image to pdf, image to png, online scanner, document scanner, scanx ocr"
+        canonical="/scan"
+      />
+      <div className="w-full max-w-3xl mx-auto text-gray-100 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center">
+        <h2 className="text-2xl md:text-3xl font-semibold mb-4">OCR Scan</h2>
       <label className="block w-full mb-4 p-2 border border-dashed border-white/30 rounded-lg text-center cursor-pointer hover:bg-white/10">
         <span className="text-white/80">Choose Image or Take Photo</span>
         <input
@@ -103,7 +111,8 @@ export default function Scan() {
       )}
       {isLoading && <div className="mt-2 text-green-400">Scanning...</div>}
       {!image && <p className="mt-2 text-white/70">Upload an image to scan.</p>}
-    </div>
+      </div>
+    </>
   );
 }
 

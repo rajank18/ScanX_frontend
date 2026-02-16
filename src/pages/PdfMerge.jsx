@@ -13,6 +13,7 @@ import {
   useSortable
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import SEO from "@/components/SEO";
 
 export default function PdfMerge() {
   const [pdfFiles, setPdfFiles] = useState([]);
@@ -146,8 +147,15 @@ export default function PdfMerge() {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto text-gray-100 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center">
-      <h2 className="text-2xl md:text-3xl font-semibold mb-4">Merge PDFs</h2>
+    <>
+      <SEO 
+        title="Free PDF Merger - Combine Multiple PDFs Online"
+        description="Free online PDF merger tool. Combine and merge multiple PDF files into one. Drag, drop, reorder, and merge PDFs instantly in your browser. No registration required."
+        keywords="merge pdf, combine pdf, pdf merger, join pdf, merge pdf files, combine pdf files, pdf combiner, scanx merge"
+        canonical="/merge-pdf"
+      />
+      <div className="w-full max-w-3xl mx-auto text-gray-100 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center">
+        <h2 className="text-2xl md:text-3xl font-semibold mb-4">Merge PDFs</h2>
       <input
         type="file"
         accept="application/pdf"
@@ -193,7 +201,8 @@ export default function PdfMerge() {
         </a>
       )}
       <p className="mt-2 text-white/70">Select multiple PDF files, reorder them, and merge into one.</p>
-    </div>
+      </div>
+    </>
   );
 }
 
