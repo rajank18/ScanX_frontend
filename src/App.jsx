@@ -62,7 +62,7 @@ function App() {
       </main>
 
       <footer className="border-t border-white/10 text-center text-xs text-white/50 py-4">
-        <div className="container-narrow font-extrabold">Made By RAJAN❤︎</div>
+        <div className="container-narrow font-extrabold">Made By <a href="https://github.com/rajank18">RAJAN❤︎</a></div>
       </footer>
     </div>
   );
