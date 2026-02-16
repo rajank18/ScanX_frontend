@@ -52,7 +52,7 @@ export default function Home() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6 place-items-center">
           <FeatureCard
-            to="/convertor"
+            to="/convertors"
             title="Ultimate Converter"
             subtitle="All file conversions in one place"
             icon={<img src={mergeIcon} alt="Ultimate Converter" className="w-8 h-8 md:w-12 md:h-12" />}
