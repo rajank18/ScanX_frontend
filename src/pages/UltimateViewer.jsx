@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import SEO from "@/components/SEO";
 import * as XLSX from "xlsx";
-import * as docx from "docx-preview";
+import { renderAsync } from "docx-preview";
 
 export default function UltimateViewer() {
   const [file, setFile] = useState(null);
@@ -48,8 +48,9 @@ export default function UltimateViewer() {
     const reader = new FileReader();
     reader.onload = async (event) => {
       try {
-        const { getDocument, GlobalWorkerOptions } = await import("pdfjs-dist");
-        GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
+        const pdfjsLib = await import("pdfjs-dist");
+        const { getDocument, GlobalWorkerOptions } = pdfjsLib;
+        GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
         
         const pdf = await getDocument({ data: event.target.result }).promise;
         setPdfPages(pdf.numPages);
@@ -92,8 +93,9 @@ export default function UltimateViewer() {
     const reader = new FileReader();
     reader.onload = async (event) => {
       try {
-        const { getDocument, GlobalWorkerOptions } = await import("pdfjs-dist");
-        GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
+        const pdfjsLib = await import("pdfjs-dist");
+        const { getDocument, GlobalWorkerOptions } = pdfjsLib;
+        GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
         
         const pdf = await getDocument({ data: event.target.result }).promise;
         await renderPdfPage(pdf, pageNum);
@@ -111,7 +113,7 @@ export default function UltimateViewer() {
       try {
         if (docxContainerRef.current) {
           docxContainerRef.current.innerHTML = "";
-          await docx.renderAsync(e.target.result, docxContainerRef.current);
+          await renderAsync(e.target.result, docxContainerRef.current);
         }
       } catch (err) {
         setErrorMessage("Failed to load DOCX. " + (err.message || ""));
