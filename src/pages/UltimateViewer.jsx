@@ -2,6 +2,10 @@ import { useState, useRef, useEffect } from "react";
 import SEO from "@/components/SEO";
 import * as XLSX from "xlsx";
 import { renderAsync } from "docx-preview";
+import * as pdfjs from "pdfjs-dist";
+
+// Initialize PDF.js worker
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
 
 export default function UltimateViewer() {
   const [file, setFile] = useState(null);
@@ -48,11 +52,7 @@ export default function UltimateViewer() {
     const reader = new FileReader();
     reader.onload = async (event) => {
       try {
-        const pdfjsLib = await import("pdfjs-dist");
-        const { getDocument, GlobalWorkerOptions } = pdfjsLib;
-        GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-        
-        const pdf = await getDocument({ data: event.target.result }).promise;
+        const pdf = await pdfjs.getDocument({ data: event.target.result }).promise;
         setPdfPages(pdf.numPages);
         renderPdfPage(pdf, 1);
       } catch (err) {
@@ -93,11 +93,7 @@ export default function UltimateViewer() {
     const reader = new FileReader();
     reader.onload = async (event) => {
       try {
-        const pdfjsLib = await import("pdfjs-dist");
-        const { getDocument, GlobalWorkerOptions } = pdfjsLib;
-        GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-        
-        const pdf = await getDocument({ data: event.target.result }).promise;
+        const pdf = await pdfjs.getDocument({ data: event.target.result }).promise;
         await renderPdfPage(pdf, pageNum);
       } catch (err) {
         setErrorMessage("Failed to render page. " + (err.message || ""));
@@ -113,9 +109,13 @@ export default function UltimateViewer() {
       try {
         if (docxContainerRef.current) {
           docxContainerRef.current.innerHTML = "";
-          await renderAsync(e.target.result, docxContainerRef.current);
+          await renderAsync(e.target.result, docxContainerRef.current, null, {
+            className: "docx-preview",
+            ignoreLastRenderedPageBreak: true,
+          });
         }
       } catch (err) {
+        console.error("DOCX Error:", err);
         setErrorMessage("Failed to load DOCX. " + (err.message || ""));
       } finally {
         setIsLoading(false);
@@ -261,12 +261,13 @@ export default function UltimateViewer() {
             <h3 className="text-lg font-semibold mb-4">Document Viewer</h3>
             <div 
               ref={docxContainerRef} 
-              className="bg-white text-black rounded-lg p-8 max-h-[600px] overflow-auto"
+              className="bg-white text-black rounded-lg p-8 min-h-[400px] max-h-[600px] overflow-auto shadow-lg"
               style={{ 
                 fontSize: "12pt",
-                fontFamily: "Calibri, sans-serif",
-                lineHeight: "1.5",
-                color: "#000"
+                fontFamily: "Calibri, Arial, sans-serif",
+                lineHeight: "1.6",
+                color: "#000",
+                background: "white"
               }}
             />
           </div>
