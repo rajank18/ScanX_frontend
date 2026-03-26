@@ -4,6 +4,7 @@ import SEO from "@/components/SEO";
 import scanIcon from "../assets/scan.png";
 import pdfCompressIcon from "../assets/pdfcompress.png";
 import imgCompressIcon from "../assets/imgcompress.png";
+import viewer from "../assets/viewer.jpg";
 import mergeIcon from "../assets/merge.png";
 import { useState } from "react";
 import PageInfoSection from "@/components/PageInfoSection";
@@ -59,7 +60,7 @@ export default function Home() {
             icon={<img src={mergeIcon} alt="Ultimate Converter" className="w-8 h-8 md:w-12 md:h-12" />}
           />
           <FeatureCard to="/scan" title="OCR Scan" subtitle="Image → PDF/PNG" icon={<img src={scanIcon} alt="OCR Scan" className="w-8 h-8 md:w-12 md:h-12" />} />
-          <FeatureCard to="/viewer" title="Ultimate Viewer" subtitle="View PDF/DOCX/Excel" icon={<img src={pdfCompressIcon} alt="Ultimate Viewer" className="w-8 h-8 md:w-12 md:h-12" />} />
+          <FeatureCard to="/viewer" title="Ultimate Viewer" subtitle="View PDF/DOCX/Excel" icon={<img src={viewer} alt="Ultimate Viewer" className="w-8 h-8 md:w-12 md:h-12" />} />
 
           <FeatureCard to="/image-compress" title="Image Compress" subtitle="Optimize PNG/JPG" icon={<img src={imgCompressIcon} alt="Image Compress" className="w-8 h-8 md:w-12 md:h-12" />} />
           <FeatureCard to="/merge-pdf" title="Merge PDFs" subtitle="Combine multiple" icon={<img src={mergeIcon} alt="Merge PDFs" className="w-8 h-8 md:w-12 md:h-12" />} />
