@@ -15,6 +15,7 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@hello-pangea/dnd": "^18.0.1",
     "@pdf-viewer/react": "^1.19.0",
+    "@pdftron/webviewer": "^11.11.0",
     "@tailwindcss/vite": "^4.1.13",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
