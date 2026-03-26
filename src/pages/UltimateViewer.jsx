@@ -18,7 +18,7 @@ export default function UltimateViewer() {
 
     WebViewer(
       {
-        path: "https://cdn.jsdelivr.net/npm/@pdftron/webviewer@10.3.0/public",
+        path: "/webviewer",
         fullAPI: true,
       },
       viewerRef.current
