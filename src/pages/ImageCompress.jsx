@@ -2,7 +2,7 @@ import { useState } from "react";
 import ImageUpload from "../components/ImageUpload";
 import SEO from "@/components/SEO";
 import PageInfoSection from "@/components/PageInfoSection";
-import { apiFetch } from "@/lib/api";
+import { compressAccurately } from "image-conversion";
 
 export default function ImageCompress() {
   const [image, setImage] = useState(null);
@@ -23,25 +23,18 @@ export default function ImageCompress() {
     }
     setIsCompressing(true);
     setErrorMessage("");
-    const formData = new FormData();
-    formData.append("image", image);
-    formData.append("targetSize", targetSize);
-    formData.append("quality", quality);
+
     try {
-      // Set original size when compressing
       setOriginalSize(image.size);
 
-      const res = await apiFetch("/compress-image", { method: "POST", body: formData });
-      if (!res.ok) {
-        let errorText = await res.text();
-        // Try to parse error JSON
-        try {
-          const errorJson = JSON.parse(errorText);
-          errorText = errorJson.error || errorText;
-        } catch {}
-        throw new Error(errorText || `Request failed with ${res.status}`);
-      }
-      const blob = await res.blob();
+      const outputType = image.type === "image/png" ? "image/png" : "image/jpeg";
+      const accuracy = Math.min(0.99, Math.max(0.8, quality / 100));
+      const blob = await compressAccurately(image, {
+        size: Number(targetSize),
+        accuracy,
+        type: outputType,
+      });
+
       setCompressedSize(blob.size);
       const objectUrl = URL.createObjectURL(blob);
       setCompressedBlobUrl((prev) => {
@@ -119,7 +112,7 @@ export default function ImageCompress() {
           {compressedBlobUrl && (
             <a 
               href={compressedBlobUrl} 
-              download="compressed-image.jpg" 
+              download={`compressed-image.${image?.type === "image/png" ? "png" : "jpg"}`} 
               className="mt-4 px-4 py-2 bg-black text-gray-100 rounded-md hover:bg-gray-800"
             >
               Download

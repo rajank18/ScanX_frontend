@@ -15,7 +15,7 @@ import {
   useSortable
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { apiFetch } from "@/lib/api";
+import { PDFDocument } from "pdf-lib";
 
 export default function ImageToPdf() {
   const [images, setImages] = useState([]);
@@ -30,17 +30,30 @@ export default function ImageToPdf() {
 
   const handleConvert = async () => {
     if (!images.length) return;
-    const formData = new FormData();
-    images.forEach((img, idx) => formData.append("images", img));
     try {
       setIsLoading(true);
       setErrorMessage("");
-      const res = await apiFetch("/convert/image-to-pdf", { method: "POST", body: formData });
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || `Request failed with ${res.status}`);
+
+      const pdfDoc = await PDFDocument.create();
+
+      for (const imageFile of images) {
+        const bytes = await imageFile.arrayBuffer();
+        const isPng = imageFile.type === "image/png" || imageFile.name.toLowerCase().endsWith(".png");
+        const embeddedImage = isPng
+          ? await pdfDoc.embedPng(bytes)
+          : await pdfDoc.embedJpg(bytes);
+
+        const page = pdfDoc.addPage([embeddedImage.width, embeddedImage.height]);
+        page.drawImage(embeddedImage, {
+          x: 0,
+          y: 0,
+          width: embeddedImage.width,
+          height: embeddedImage.height,
+        });
       }
-      const blob = await res.blob();
+
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
       const objectUrl = URL.createObjectURL(blob);
       setPdfBlobUrl((prev) => {
         if (prev) URL.revokeObjectURL(prev);

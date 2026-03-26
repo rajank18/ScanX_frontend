@@ -1,7 +1,10 @@
 import { useState } from "react";
 import SEO from "@/components/SEO";
-import { apiFetch } from "@/lib/api";
 import PageInfoSection from "@/components/PageInfoSection";
+import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
+import pdfWorker from "pdfjs-dist/legacy/build/pdf.worker.min.mjs?url";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
 export default function PdfToImage() {
   const [file, setFile] = useState(null);
@@ -20,23 +23,51 @@ export default function PdfToImage() {
 
   const handleConvert = async () => {
     if (!file) return;
-    const formData = new FormData();
-    formData.append("file", file);
+
+    imageUrls.forEach((url) => {
+      if (url.startsWith("blob:")) {
+        URL.revokeObjectURL(url);
+      }
+    });
+
     try {
       setIsLoading(true);
       setErrorMessage("");
-      const res = await apiFetch("/convert/pdf-to-images", { 
-        method: "POST", 
-        body: formData 
-      });
-      
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || `Request failed with ${res.status}`);
+
+      const data = await file.arrayBuffer();
+      const loadingTask = pdfjsLib.getDocument({ data });
+      const pdf = await loadingTask.promise;
+
+      const pages = [];
+      for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+        const page = await pdf.getPage(pageNumber);
+        const viewport = page.getViewport({ scale: 2 });
+
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        if (!context) {
+          throw new Error("Failed to initialize canvas context");
+        }
+
+        canvas.width = Math.ceil(viewport.width);
+        canvas.height = Math.ceil(viewport.height);
+
+        await page.render({ canvasContext: context, viewport }).promise;
+
+        const blob = await new Promise((resolve, reject) => {
+          canvas.toBlob((result) => {
+            if (!result) {
+              reject(new Error("Failed to render page image"));
+              return;
+            }
+            resolve(result);
+          }, "image/png");
+        });
+
+        pages.push(URL.createObjectURL(blob));
       }
-      
-      const data = await res.json();
-      setImageUrls(data.images || []);
+
+      setImageUrls(pages);
     } catch (err) {
       setErrorMessage(err instanceof Error ? err.message : "Failed to convert");
     } finally {

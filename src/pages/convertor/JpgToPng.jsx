@@ -1,6 +1,42 @@
 import { useState } from "react";
 import SEO from "@/components/SEO";
-import { apiFetch } from "@/lib/api";
+import browserImageCoverter from "browser-image-converter";
+
+async function convertImageBlob(file, outputMimeType) {
+  const sourceUrl = URL.createObjectURL(file);
+  try {
+    const base64 = await browserImageCoverter.getImageBase64FromUrl(sourceUrl);
+    const dataUrl = `data:${file.type || "image/jpeg"};base64,${base64}`;
+
+    const image = await new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error("Failed to decode image"));
+      img.src = dataUrl;
+    });
+
+    const canvas = document.createElement("canvas");
+    canvas.width = image.width;
+    canvas.height = image.height;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      throw new Error("Failed to initialize canvas context");
+    }
+    ctx.drawImage(image, 0, 0);
+
+    return await new Promise((resolve, reject) => {
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          reject(new Error("Failed to convert image"));
+          return;
+        }
+        resolve(blob);
+      }, outputMimeType);
+    });
+  } finally {
+    URL.revokeObjectURL(sourceUrl);
+  }
+}
 
 export default function JpgToPng() {
   const [image, setImage] = useState(null);
@@ -19,22 +55,10 @@ export default function JpgToPng() {
 
   const handleConvert = async () => {
     if (!image) return;
-    const formData = new FormData();
-    formData.append("image", image);
     try {
       setIsLoading(true);
       setErrorMessage("");
-      const res = await apiFetch("/convert/jpg-to-png", { 
-        method: "POST", 
-        body: formData 
-      });
-      
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || `Request failed with ${res.status}`);
-      }
-      
-      const blob = await res.blob();
+      const blob = await convertImageBlob(image, "image/png");
       const objectUrl = URL.createObjectURL(blob);
       setPngBlobUrl((prev) => {
         if (prev) URL.revokeObjectURL(prev);

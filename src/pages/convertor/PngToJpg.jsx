@@ -1,6 +1,50 @@
 import { useState } from "react";
 import SEO from "@/components/SEO";
-import { apiFetch } from "@/lib/api";
+import browserImageCoverter from "browser-image-converter";
+
+async function convertImageBlob(file, outputMimeType, quality = 0.9) {
+  const sourceUrl = URL.createObjectURL(file);
+  try {
+    const base64 = await browserImageCoverter.getImageBase64FromUrl(sourceUrl);
+    const dataUrl = `data:${file.type || "image/png"};base64,${base64}`;
+
+    const image = await new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error("Failed to decode image"));
+      img.src = dataUrl;
+    });
+
+    const canvas = document.createElement("canvas");
+    canvas.width = image.width;
+    canvas.height = image.height;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      throw new Error("Failed to initialize canvas context");
+    }
+
+    // Fill background white before exporting JPEG to avoid black alpha areas.
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(image, 0, 0);
+
+    return await new Promise((resolve, reject) => {
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) {
+            reject(new Error("Failed to convert image"));
+            return;
+          }
+          resolve(blob);
+        },
+        outputMimeType,
+        quality
+      );
+    });
+  } finally {
+    URL.revokeObjectURL(sourceUrl);
+  }
+}
 
 export default function PngToJpg() {
   const [image, setImage] = useState(null);
@@ -19,22 +63,10 @@ export default function PngToJpg() {
 
   const handleConvert = async () => {
     if (!image) return;
-    const formData = new FormData();
-    formData.append("image", image);
     try {
       setIsLoading(true);
       setErrorMessage("");
-      const res = await apiFetch("/convert/png-to-jpg", { 
-        method: "POST", 
-        body: formData 
-      });
-      
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || `Request failed with ${res.status}`);
-      }
-      
-      const blob = await res.blob();
+      const blob = await convertImageBlob(image, "image/jpeg", 0.9);
       const objectUrl = URL.createObjectURL(blob);
       setJpgBlobUrl((prev) => {
         if (prev) URL.revokeObjectURL(prev);
