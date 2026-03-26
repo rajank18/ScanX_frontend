@@ -50,7 +50,7 @@ export default function Home() {
           <p className="mt-2 md:mt-3 text-white/70 text-sm md:text-base">Fast, private, mobile-first utilities for PDF & image conversion</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6 place-items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 place-items-center">
           <FeatureCard
             to="/convertor"
             title="Ultimate Converter"
@@ -58,9 +58,8 @@ export default function Home() {
             icon={<img src={mergeIcon} alt="Ultimate Converter" className="w-8 h-8 md:w-12 md:h-12" />}
           />
           <FeatureCard to="/scan" title="OCR Scan" subtitle="Image → PDF/PNG" icon={<img src={scanIcon} alt="OCR Scan" className="w-8 h-8 md:w-12 md:h-12" />} />
+          <FeatureCard to="/viewer" title="Ultimate Viewer" subtitle="View PDF/DOCX/Excel" icon={<img src={pdfCompressIcon} alt="Ultimate Viewer" className="w-8 h-8 md:w-12 md:h-12" />} />
 
-          {/* <FeatureCard to="/pdf-compress" title="PDF Compress" subtitle="Reduce file size" icon={<img src={pdfCompressIcon} alt="PDF Compress" className="w-8 h-8 md:w-12 md:h-12" />} /> */}
-          
           <FeatureCard to="/image-compress" title="Image Compress" subtitle="Optimize PNG/JPG" icon={<img src={imgCompressIcon} alt="Image Compress" className="w-8 h-8 md:w-12 md:h-12" />} />
           <FeatureCard to="/merge-pdf" title="Merge PDFs" subtitle="Combine multiple" icon={<img src={mergeIcon} alt="Merge PDFs" className="w-8 h-8 md:w-12 md:h-12" />} />
         </div>

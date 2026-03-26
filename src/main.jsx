@@ -10,6 +10,7 @@ import PdfCompress from './pages/PdfCompress.jsx'
 import ImageCompress from './pages/ImageCompress.jsx'
 import PdfMerge from './pages/PdfMerge.jsx'
 import Convertor from './pages/Convertor.jsx'
+import UltimateViewer from './pages/UltimateViewer.jsx'
 import ImageToPdf from './pages/convertor/ImageToPdf.jsx'
 import WordToPdf from './pages/convertor/WordToPdf.jsx'
 import PdfToWord from './pages/convertor/PdfToWord.jsx'
@@ -31,6 +32,7 @@ const router = createBrowserRouter([
       { path: 'image-compress', element: <ImageCompress /> },
       { path: 'merge-pdf', element: <PdfMerge /> },
       { path: 'convertor', element: <Convertor /> },
+      { path: 'viewer', element: <UltimateViewer /> },
       { path: 'convertor/image-to-pdf', element: <ImageToPdf /> },
       { path: 'convertor/word-to-pdf', element: <WordToPdf /> },
       { path: 'convertor/pdf-to-word', element: <PdfToWord /> },
