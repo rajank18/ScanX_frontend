@@ -1,10 +1,10 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import SEO from "@/components/SEO";
-import * as XLSX from "xlsx";
-import { renderAsync } from "docx-preview";
+import DocViewer, { DocViewerRenderers } from "react-doc-viewer";
 import * as pdfjs from "pdfjs-dist";
+import ExcelJS from "exceljs";
 
-// Initialize PDF.js worker
+// Configure PDF.js worker
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
 
 export default function UltimateViewer() {
@@ -12,12 +12,12 @@ export default function UltimateViewer() {
   const [fileType, setFileType] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [docs, setDocs] = useState([]);
   const [pdfPages, setPdfPages] = useState(null);
   const [currentPdfPage, setCurrentPdfPage] = useState(1);
   const [excelSheets, setExcelSheets] = useState([]);
   const [currentSheet, setCurrentSheet] = useState(0);
-  const pdfContainerRef = useRef(null);
-  const docxContainerRef = useRef(null);
+  const pdfCanvasRef = useRef(null);
 
   const handleFileSelect = async (e) => {
     const selectedFile = e.target.files[0];
@@ -25,60 +25,69 @@ export default function UltimateViewer() {
 
     setFile(selectedFile);
     setErrorMessage("");
+    setDocs([]);
     setPdfPages(null);
-    setExcelSheets([]);
     setCurrentPdfPage(1);
+    setExcelSheets([]);
     setCurrentSheet(0);
+    setIsLoading(true);
 
     const fileName = selectedFile.name.toLowerCase();
     
-    if (fileName.endsWith(".pdf")) {
-      setFileType("pdf");
-      handlePdfFile(selectedFile);
-    } else if (fileName.endsWith(".docx") || fileName.endsWith(".doc")) {
-      setFileType("docx");
-      handleDocxFile(selectedFile);
-    } else if (fileName.endsWith(".xlsx") || fileName.endsWith(".xls") || fileName.endsWith(".csv")) {
-      setFileType("excel");
-      handleExcelFile(selectedFile);
-    } else {
-      setErrorMessage("Unsupported file type. Please upload PDF, DOCX, or Excel files.");
-      setFileType(null);
+    try {
+      if (fileName.endsWith(".pdf")) {
+        setFileType("pdf");
+        handlePdfFile(selectedFile);
+      } else if (fileName.endsWith(".docx") || fileName.endsWith(".doc")) {
+        setFileType("docx");
+        const url = URL.createObjectURL(selectedFile);
+        setDocs([{ uri: url, fileType: "docx", fileName: selectedFile.name }]);
+        setIsLoading(false);
+      } else if (fileName.endsWith(".xlsx") || fileName.endsWith(".xls")) {
+        setFileType("excel");
+        handleExcelFile(selectedFile);
+      } else {
+        setErrorMessage("Unsupported file type. Please upload PDF, DOCX, or Excel files.");
+        setFileType(null);
+        setIsLoading(false);
+      }
+    } catch (err) {
+      setErrorMessage("Error processing file: " + (err.message || ""));
+      setIsLoading(false);
     }
   };
 
-  const handlePdfFile = (file) => {
-    setIsLoading(true);
-    const reader = new FileReader();
-    reader.onload = async (event) => {
-      try {
-        const pdf = await pdfjs.getDocument({ data: event.target.result }).promise;
-        setPdfPages(pdf.numPages);
-        renderPdfPage(pdf, 1);
-      } catch (err) {
-        setErrorMessage("Failed to load PDF. " + (err.message || ""));
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    reader.readAsArrayBuffer(file);
+  const handlePdfFile = async (file) => {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
+      setPdfPages(pdf.numPages);
+      renderPdfPage(pdf, 1);
+    } catch (err) {
+      setErrorMessage("Failed to load PDF. " + (err.message || ""));
+      setIsLoading(false);
+    }
   };
 
   const renderPdfPage = async (pdf, pageNum) => {
     try {
       setIsLoading(true);
       const page = await pdf.getPage(pageNum);
-      const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
-      const viewport = page.getViewport({ scale: 2 });
+      const scale = 2;
+      const viewport = page.getViewport({ scale });
+      
+      if (!pdfCanvasRef.current) return;
+      
+      const canvas = pdfCanvasRef.current;
       canvas.height = viewport.height;
       canvas.width = viewport.width;
-      await page.render({ canvasContext: context, viewport }).promise;
       
-      if (pdfContainerRef.current) {
-        pdfContainerRef.current.innerHTML = "";
-        pdfContainerRef.current.appendChild(canvas);
-      }
+      const context = canvas.getContext("2d");
+      await page.render({
+        canvasContext: context,
+        viewport: viewport,
+      }).promise;
+      
       setCurrentPdfPage(pageNum);
     } catch (err) {
       setErrorMessage("Failed to render page. " + (err.message || ""));
@@ -90,64 +99,40 @@ export default function UltimateViewer() {
   const handlePdfPageChange = async (pageNum) => {
     if (!file || pageNum < 1 || pageNum > pdfPages) return;
     
-    const reader = new FileReader();
-    reader.onload = async (event) => {
-      try {
-        const pdf = await pdfjs.getDocument({ data: event.target.result }).promise;
-        await renderPdfPage(pdf, pageNum);
-      } catch (err) {
-        setErrorMessage("Failed to render page. " + (err.message || ""));
-      }
-    };
-    reader.readAsArrayBuffer(file);
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
+      await renderPdfPage(pdf, pageNum);
+    } catch (err) {
+      setErrorMessage("Failed to change page. " + (err.message || ""));
+    }
   };
 
-  const handleDocxFile = (file) => {
-    setIsLoading(true);
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      try {
-        if (docxContainerRef.current) {
-          docxContainerRef.current.innerHTML = "";
-          await renderAsync(e.target.result, docxContainerRef.current, null, {
-            className: "docx-preview",
-            ignoreLastRenderedPageBreak: true,
-          });
-        }
-      } catch (err) {
-        console.error("DOCX Error:", err);
-        setErrorMessage("Failed to load DOCX. " + (err.message || ""));
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    reader.readAsArrayBuffer(file);
-  };
+  const handleExcelFile = async (file) => {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const workbook = new ExcelJS.Workbook();
+      await workbook.xlsx.load(arrayBuffer);
 
-  const handleExcelFile = (file) => {
-    setIsLoading(true);
-    const reader = new FileReader();
-    reader.readAsArrayBuffer(file);
-    reader.onload = (e) => {
-      try {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: "array" });
-        const sheets = [];
-        
-        workbook.SheetNames.forEach((sheetName) => {
-          const worksheet = workbook.Sheets[sheetName];
-          const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-          sheets.push({ name: sheetName, data: jsonData });
+      const sheets = [];
+      workbook.eachSheet((worksheet) => {
+        const data = [];
+        worksheet.eachRow((row) => {
+          data.push(row.values.slice(1));
         });
-        
-        setExcelSheets(sheets);
-        setCurrentSheet(0);
-      } catch (err) {
-        setErrorMessage("Failed to load Excel file. " + (err.message || ""));
-      } finally {
-        setIsLoading(false);
-      }
-    };
+        sheets.push({
+          name: worksheet.name,
+          data: data,
+        });
+      });
+
+      setExcelSheets(sheets);
+      setCurrentSheet(0);
+    } catch (err) {
+      setErrorMessage("Failed to load Excel file. " + (err.message || ""));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -167,7 +152,7 @@ export default function UltimateViewer() {
             <span className="text-white/80">Choose a file (PDF, DOCX, XLS, XLSX)</span>
             <input
               type="file"
-              accept=".pdf,.docx,.doc,.xlsx,.xls,.csv,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+              accept=".pdf,.docx,.doc,.xlsx,.xls,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
               onChange={handleFileSelect}
               className="hidden"
             />
@@ -201,13 +186,14 @@ export default function UltimateViewer() {
               <span className="text-sm text-white/70">Page {currentPdfPage} of {pdfPages}</span>
             </div>
             
-            <div 
-              ref={pdfContainerRef} 
-              className="bg-black/50 rounded-lg p-4 mb-4 flex justify-center overflow-auto max-h-[600px]"
-              style={{ display: "flex", justifyContent: "center", alignItems: "flex-start" }}
-            />
+            <div className="bg-black/50 rounded-lg p-4 mb-4 flex justify-center overflow-auto max-h-[600px]">
+              <canvas 
+                ref={pdfCanvasRef}
+                className="max-w-full h-auto"
+              />
+            </div>
 
-            <div className="flex gap-2 justify-center flex-wrap sticky bottom-0 bg-black/20 p-3 rounded">
+            <div className="flex gap-2 justify-center flex-wrap bg-black/20 p-3 rounded">
               <button
                 onClick={() => handlePdfPageChange(1)}
                 disabled={currentPdfPage <= 1 || isLoading}
@@ -256,20 +242,21 @@ export default function UltimateViewer() {
         )}
 
         {/* DOCX Viewer */}
-        {fileType === "docx" && !isLoading && (
+        {fileType === "docx" && docs.length > 0 && !isLoading && (
           <div className="backdrop-blur-md p-6 rounded-2xl border border-white/20">
             <h3 className="text-lg font-semibold mb-4">Document Viewer</h3>
-            <div 
-              ref={docxContainerRef} 
-              className="bg-white text-black rounded-lg p-8 min-h-[400px] max-h-[600px] overflow-auto shadow-lg"
-              style={{ 
-                fontSize: "12pt",
-                fontFamily: "Calibri, Arial, sans-serif",
-                lineHeight: "1.6",
-                color: "#000",
-                background: "white"
-              }}
-            />
+            <div className="bg-white text-black rounded-lg overflow-hidden max-h-[600px]">
+              <DocViewer 
+                documents={docs} 
+                pluginRenderers={DocViewerRenderers}
+                config={{
+                  header: {
+                    disableHeader: false,
+                    disableFileName: false,
+                  }
+                }}
+              />
+            </div>
           </div>
         )}
 
