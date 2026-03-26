@@ -1,6 +1,7 @@
 import { useState } from "react";
 import SEO from "@/components/SEO";
 import PageInfoSection from "@/components/PageInfoSection";
+import { apiFetch } from "@/lib/api";
 
 export default function PdfCompress() {
   const [file, setFile] = useState(null);
@@ -29,14 +30,12 @@ export default function PdfCompress() {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("quality", quality);
-    const baseUrl = import.meta.env.VITE_API_URL ?? "http://localhost:5000";
-
     try {
       setIsCompressing(true);
       setErrorMessage("");
       setOriginalSize(file.size);
 
-      const res = await fetch(`${baseUrl}/compress-pdf`, { 
+      const res = await apiFetch("/compress-pdf", { 
         method: "POST", 
         body: formData 
       });

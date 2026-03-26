@@ -1,5 +1,6 @@
 import { useState } from "react";
 import SEO from "@/components/SEO";
+import { apiFetch } from "@/lib/api";
 
 export default function JpgToPng() {
   const [image, setImage] = useState(null);
@@ -20,12 +21,10 @@ export default function JpgToPng() {
     if (!image) return;
     const formData = new FormData();
     formData.append("image", image);
-    const baseUrl = import.meta.env.VITE_API_URL ?? "http://localhost:5000";
-    
     try {
       setIsLoading(true);
       setErrorMessage("");
-      const res = await fetch(`${baseUrl}/convert/jpg-to-png`, { 
+      const res = await apiFetch("/convert/jpg-to-png", { 
         method: "POST", 
         body: formData 
       });

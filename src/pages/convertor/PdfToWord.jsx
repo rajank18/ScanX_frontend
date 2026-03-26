@@ -1,5 +1,6 @@
 import { useState } from "react";
 import SEO from "@/components/SEO";
+import { apiFetch } from "@/lib/api";
 import PageInfoSection from "@/components/PageInfoSection";
 
 export default function PdfToWord() {
@@ -21,12 +22,10 @@ export default function PdfToWord() {
     if (!file) return;
     const formData = new FormData();
     formData.append("file", file);
-    const baseUrl = import.meta.env.VITE_API_URL ?? "http://localhost:5000";
-    
     try {
       setIsLoading(true);
       setErrorMessage("");
-      const res = await fetch(`${baseUrl}/convert/pdf-to-word`, { 
+      const res = await apiFetch("/convert/pdf-to-word", { 
         method: "POST", 
         body: formData 
       });

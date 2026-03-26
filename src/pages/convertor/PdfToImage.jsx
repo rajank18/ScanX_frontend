@@ -1,5 +1,6 @@
 import { useState } from "react";
 import SEO from "@/components/SEO";
+import { apiFetch } from "@/lib/api";
 import PageInfoSection from "@/components/PageInfoSection";
 
 export default function PdfToImage() {
@@ -21,12 +22,10 @@ export default function PdfToImage() {
     if (!file) return;
     const formData = new FormData();
     formData.append("file", file);
-    const baseUrl = import.meta.env.VITE_API_URL ?? "http://localhost:5000";
-    
     try {
       setIsLoading(true);
       setErrorMessage("");
-      const res = await fetch(`${baseUrl}/convert/pdf-to-images`, { 
+      const res = await apiFetch("/convert/pdf-to-images", { 
         method: "POST", 
         body: formData 
       });

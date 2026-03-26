@@ -15,6 +15,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import SEO from "@/components/SEO";
 import PageInfoSection from "@/components/PageInfoSection";
+import { apiFetch } from "@/lib/api";
 
 export default function PdfMerge() {
   const [pdfFiles, setPdfFiles] = useState([]);
@@ -125,8 +126,7 @@ export default function PdfMerge() {
       pdfFiles.forEach((file, idx) => {
         formData.append('pdfs', file, file.name);
       });
-      const baseUrl = import.meta.env.VITE_API_URL ?? "http://localhost:5000";
-      const res = await fetch(`${baseUrl}/merge/merge`, {
+      const res = await apiFetch("/merge/merge", {
         method: 'POST',
         body: formData,
       });

@@ -15,6 +15,7 @@ import {
   useSortable
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { apiFetch } from "@/lib/api";
 
 export default function ImageToPdf() {
   const [images, setImages] = useState([]);
@@ -22,19 +23,19 @@ export default function ImageToPdf() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleImageSelect = (files) => {
-    setImages((prev) => [...prev, ...files]);
+  const handleImageSelect = (filesOrFile) => {
+    const normalizedFiles = Array.isArray(filesOrFile) ? filesOrFile : [filesOrFile];
+    setImages((prev) => [...prev, ...normalizedFiles.filter(Boolean)]);
   };
 
   const handleConvert = async () => {
     if (!images.length) return;
     const formData = new FormData();
     images.forEach((img, idx) => formData.append("images", img));
-    const baseUrl = import.meta.env.VITE_API_URL ?? "http://localhost:5000";
     try {
       setIsLoading(true);
       setErrorMessage("");
-      const res = await fetch(`${baseUrl}/convert/image-to-pdf`, { method: "POST", body: formData });
+      const res = await apiFetch("/convert/image-to-pdf", { method: "POST", body: formData });
       if (!res.ok) {
         const text = await res.text();
         throw new Error(text || `Request failed with ${res.status}`);

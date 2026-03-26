@@ -1,5 +1,6 @@
 import { useState } from "react";
 import SEO from "@/components/SEO";
+import { apiFetch } from "@/lib/api";
 
 export default function ExcelToPdf() {
   const [file, setFile] = useState(null);
@@ -20,12 +21,10 @@ export default function ExcelToPdf() {
     if (!file) return;
     const formData = new FormData();
     formData.append("file", file);
-    const baseUrl = import.meta.env.VITE_API_URL ?? "http://localhost:5000";
-    
     try {
       setIsLoading(true);
       setErrorMessage("");
-      const res = await fetch(`${baseUrl}/convert/excel-to-pdf`, { 
+      const res = await apiFetch("/convert/excel-to-pdf", { 
         method: "POST", 
         body: formData 
       });

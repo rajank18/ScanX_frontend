@@ -3,6 +3,7 @@ import { useState } from "react";
 import ScanPreview from "../components/ScanPreview";
 import SEO from "@/components/SEO";
 import PageInfoSection from "@/components/PageInfoSection";
+import { apiFetch } from "@/lib/api";
 
 export default function Scan() {
   const [image, setImage] = useState(null);
@@ -16,11 +17,10 @@ export default function Scan() {
     const formData = new FormData();
     formData.append("image", image);
     formData.append("format", format === "pdf" ? "pdf" : "");
-    const baseUrl = import.meta.env.VITE_API_URL ?? "http://localhost:5000";
     try {
       setIsLoading(true);
       setErrorMessage("");
-      const res = await fetch(`${baseUrl}/scan`, { method: "POST", body: formData });
+      const res = await apiFetch("/scan", { method: "POST", body: formData });
       if (!res.ok) {
         const text = await res.text();
         throw new Error(text || `Request failed with ${res.status}`);

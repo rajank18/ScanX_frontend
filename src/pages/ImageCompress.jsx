@@ -2,6 +2,7 @@ import { useState } from "react";
 import ImageUpload from "../components/ImageUpload";
 import SEO from "@/components/SEO";
 import PageInfoSection from "@/components/PageInfoSection";
+import { apiFetch } from "@/lib/api";
 
 export default function ImageCompress() {
   const [image, setImage] = useState(null);
@@ -26,12 +27,11 @@ export default function ImageCompress() {
     formData.append("image", image);
     formData.append("targetSize", targetSize);
     formData.append("quality", quality);
-    const baseUrl = import.meta.env.VITE_API_URL ?? "http://localhost:5000";
     try {
       // Set original size when compressing
       setOriginalSize(image.size);
 
-      const res = await fetch(`${baseUrl}/compress-image`, { method: "POST", body: formData });
+      const res = await apiFetch("/compress-image", { method: "POST", body: formData });
       if (!res.ok) {
         let errorText = await res.text();
         // Try to parse error JSON
