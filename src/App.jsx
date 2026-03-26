@@ -39,6 +39,7 @@ function App() {
             {/* <Link className="hover:text-white" to="/pdf-compress">PDF Compress</Link> */}
             <Link className="hover:text-white" to="/image-compress">Image Compress</Link>
             <Link className="hover:text-white" to="/merge-pdf">Merge PDFs</Link>
+            <Link className="hover:text-white" to="/viewer">Viewer</Link>
           </nav>
 
           {/* Mobile nav dropdown */}
@@ -49,6 +50,9 @@ function App() {
                 {/* <Link className="hover:text-white py-1" to="/pdf-compress" onClick={() => setIsMenuOpen(false)}>PDF Compress</Link> */}
                 <Link className="hover:text-white py-1" to="/image-compress" onClick={() => setIsMenuOpen(false)}>Image Compress</Link>
                 <Link className="hover:text-white py-1" to="/merge-pdf" onClick={() => setIsMenuOpen(false)}>Merge PDFs</Link>
+                <Link className="hover:text-white py-1" to="/viewer" onClick={() => setIsMenuOpen(false)}>Viewer</Link>
+                <Link className="hover:text-white py-1" to="/convertor" onClick={() => setIsMenuOpen(false)}>Convertors</Link>
+                  
               </nav>
             </div>
           )}
