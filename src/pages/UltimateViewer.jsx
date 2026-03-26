@@ -1,18 +1,19 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import SEO from "@/components/SEO";
 import * as XLSX from "xlsx";
+import * as docx from "docx-preview";
 
 export default function UltimateViewer() {
   const [file, setFile] = useState(null);
   const [fileType, setFileType] = useState(null);
-  const [viewerContent, setViewerContent] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [pdfPages, setPdfPages] = useState(null);
   const [currentPdfPage, setCurrentPdfPage] = useState(1);
   const [excelSheets, setExcelSheets] = useState([]);
   const [currentSheet, setCurrentSheet] = useState(0);
-  const [docxContent, setDocxContent] = useState(null);
+  const pdfContainerRef = useRef(null);
+  const docxContainerRef = useRef(null);
 
   const handleFileSelect = async (e) => {
     const selectedFile = e.target.files[0];
@@ -20,9 +21,7 @@ export default function UltimateViewer() {
 
     setFile(selectedFile);
     setErrorMessage("");
-    setViewerContent(null);
     setPdfPages(null);
-    setDocxContent(null);
     setExcelSheets([]);
     setCurrentPdfPage(1);
     setCurrentSheet(0);
@@ -50,20 +49,11 @@ export default function UltimateViewer() {
     reader.onload = async (event) => {
       try {
         const { getDocument, GlobalWorkerOptions } = await import("pdfjs-dist");
-        GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${await import("pdfjs-dist/package.json").then(m => m.default.version)}/pdf.worker.min.js`;
+        GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
         
         const pdf = await getDocument({ data: event.target.result }).promise;
         setPdfPages(pdf.numPages);
-        
-        // Render first page
-        const page = await pdf.getPage(1);
-        const canvas = document.createElement("canvas");
-        const context = canvas.getContext("2d");
-        const viewport = page.getViewport({ scale: 1.5 });
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-        await page.render({ canvasContext: context, viewport }).promise;
-        setViewerContent(canvas.toDataURL());
+        renderPdfPage(pdf, 1);
       } catch (err) {
         setErrorMessage("Failed to load PDF. " + (err.message || ""));
       } finally {
@@ -73,36 +63,63 @@ export default function UltimateViewer() {
     reader.readAsArrayBuffer(file);
   };
 
+  const renderPdfPage = async (pdf, pageNum) => {
+    try {
+      setIsLoading(true);
+      const page = await pdf.getPage(pageNum);
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      const viewport = page.getViewport({ scale: 2 });
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+      await page.render({ canvasContext: context, viewport }).promise;
+      
+      if (pdfContainerRef.current) {
+        pdfContainerRef.current.innerHTML = "";
+        pdfContainerRef.current.appendChild(canvas);
+      }
+      setCurrentPdfPage(pageNum);
+    } catch (err) {
+      setErrorMessage("Failed to render page. " + (err.message || ""));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handlePdfPageChange = async (pageNum) => {
+    if (!file || pageNum < 1 || pageNum > pdfPages) return;
+    
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      try {
+        const { getDocument, GlobalWorkerOptions } = await import("pdfjs-dist");
+        GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
+        
+        const pdf = await getDocument({ data: event.target.result }).promise;
+        await renderPdfPage(pdf, pageNum);
+      } catch (err) {
+        setErrorMessage("Failed to render page. " + (err.message || ""));
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  };
+
   const handleDocxFile = (file) => {
     setIsLoading(true);
     const reader = new FileReader();
-    reader.readAsArrayBuffer(file);
     reader.onload = async (e) => {
       try {
-        const JSZip = (await import("jszip")).default;
-        
-        // For DOCX preview, extract text from document.xml
-        const arrayBuffer = e.target.result;
-        const zip = new JSZip();
-        await zip.loadAsync(arrayBuffer);
-        
-        // Get document.xml for text content
-        const docXml = await zip.file("word/document.xml").async("string");
-        
-        // Extract text content from XML
-        const textMatch = docXml.match(/<w:t[^>]*>([^<]*)<\/w:t>/g) || [];
-        const textContent = textMatch
-          .map(t => t.replace(/<[^>]+>/g, ""))
-          .join(" ");
-        
-        setViewerContent(textContent || "Document loaded but no text content found.");
-        setDocxContent(textContent);
+        if (docxContainerRef.current) {
+          docxContainerRef.current.innerHTML = "";
+          await docx.renderAsync(e.target.result, docxContainerRef.current);
+        }
       } catch (err) {
         setErrorMessage("Failed to load DOCX. " + (err.message || ""));
       } finally {
         setIsLoading(false);
       }
     };
+    reader.readAsArrayBuffer(file);
   };
 
   const handleExcelFile = (file) => {
@@ -123,43 +140,12 @@ export default function UltimateViewer() {
         
         setExcelSheets(sheets);
         setCurrentSheet(0);
-        setViewerContent(sheets[0]?.data || []);
       } catch (err) {
         setErrorMessage("Failed to load Excel file. " + (err.message || ""));
       } finally {
         setIsLoading(false);
       }
     };
-  };
-
-  const handlePdfPageChange = async (pageNum) => {
-    if (!file || pageNum < 1 || pageNum > pdfPages) return;
-    
-    setCurrentPdfPage(pageNum);
-    setIsLoading(true);
-    
-    const reader = new FileReader();
-    reader.onload = async (event) => {
-      try {
-        const { getDocument, GlobalWorkerOptions } = await import("pdfjs-dist");
-        GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
-        
-        const pdf = await getDocument({ data: event.target.result }).promise;
-        const page = await pdf.getPage(pageNum);
-        const canvas = document.createElement("canvas");
-        const context = canvas.getContext("2d");
-        const viewport = page.getViewport({ scale: 1.5 });
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-        await page.render({ canvasContext: context, viewport }).promise;
-        setViewerContent(canvas.toDataURL());
-      } catch (err) {
-        setErrorMessage("Failed to render page. " + (err.message || ""));
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    reader.readAsArrayBuffer(file);
   };
 
   return (
@@ -201,36 +187,38 @@ export default function UltimateViewer() {
 
         {isLoading && (
           <div className="backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center">
-            <p className="text-green-400 font-semibold">Loading...</p>
+            <p className="text-green-400 font-semibold">Loading document...</p>
           </div>
         )}
 
         {/* PDF Viewer */}
-        {fileType === "pdf" && viewerContent && !isLoading && (
+        {fileType === "pdf" && !isLoading && (
           <div className="backdrop-blur-md p-6 rounded-2xl border border-white/20">
             <div className="mb-4 flex justify-between items-center">
               <h3 className="text-lg font-semibold">PDF Viewer</h3>
               <span className="text-sm text-white/70">Page {currentPdfPage} of {pdfPages}</span>
             </div>
             
-            <div className="bg-black/30 rounded-lg p-4 mb-4 flex justify-center max-h-96 overflow-auto">
-              <img src={viewerContent} alt={`PDF Page ${currentPdfPage}`} className="max-w-full h-auto" />
-            </div>
+            <div 
+              ref={pdfContainerRef} 
+              className="bg-black/50 rounded-lg p-4 mb-4 flex justify-center overflow-auto max-h-[600px]"
+              style={{ display: "flex", justifyContent: "center", alignItems: "flex-start" }}
+            />
 
-            <div className="flex gap-2 justify-center flex-wrap">
+            <div className="flex gap-2 justify-center flex-wrap sticky bottom-0 bg-black/20 p-3 rounded">
               <button
                 onClick={() => handlePdfPageChange(1)}
                 disabled={currentPdfPage <= 1 || isLoading}
-                className="px-3 py-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded text-sm"
+                className="px-3 py-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded text-sm font-semibold transition"
               >
                 First
               </button>
               <button
                 onClick={() => handlePdfPageChange(currentPdfPage - 1)}
                 disabled={currentPdfPage <= 1 || isLoading}
-                className="px-3 py-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded text-sm"
+                className="px-3 py-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded text-sm font-semibold transition"
               >
-                Previous
+                ← Previous
               </button>
               
               <input
@@ -244,20 +232,20 @@ export default function UltimateViewer() {
                     handlePdfPageChange(page);
                   }
                 }}
-                className="w-16 px-2 py-1 bg-white/10 border border-white/30 rounded text-white text-center text-sm"
+                className="w-16 px-2 py-1 bg-white/10 border border-white/30 rounded text-white text-center text-sm font-semibold"
               />
               
               <button
                 onClick={() => handlePdfPageChange(currentPdfPage + 1)}
                 disabled={currentPdfPage >= pdfPages || isLoading}
-                className="px-3 py-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded text-sm"
+                className="px-3 py-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded text-sm font-semibold transition"
               >
-                Next
+                Next →
               </button>
               <button
                 onClick={() => handlePdfPageChange(pdfPages)}
                 disabled={currentPdfPage >= pdfPages || isLoading}
-                className="px-3 py-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded text-sm"
+                className="px-3 py-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded text-sm font-semibold transition"
               >
                 Last
               </button>
@@ -266,14 +254,19 @@ export default function UltimateViewer() {
         )}
 
         {/* DOCX Viewer */}
-        {fileType === "docx" && docxContent && !isLoading && (
+        {fileType === "docx" && !isLoading && (
           <div className="backdrop-blur-md p-6 rounded-2xl border border-white/20">
-            <h3 className="text-lg font-semibold mb-4">Document Preview</h3>
-            <div className="bg-black/30 rounded-lg p-4 max-h-96 overflow-auto">
-              <p className="text-white/90 whitespace-pre-wrap text-sm leading-relaxed">
-                {docxContent}
-              </p>
-            </div>
+            <h3 className="text-lg font-semibold mb-4">Document Viewer</h3>
+            <div 
+              ref={docxContainerRef} 
+              className="bg-white text-black rounded-lg p-8 max-h-[600px] overflow-auto"
+              style={{ 
+                fontSize: "12pt",
+                fontFamily: "Calibri, sans-serif",
+                lineHeight: "1.5",
+                color: "#000"
+              }}
+            />
           </div>
         )}
 
@@ -283,15 +276,15 @@ export default function UltimateViewer() {
             <div className="mb-4 flex justify-between items-center flex-wrap gap-2">
               <h3 className="text-lg font-semibold">Excel Spreadsheet</h3>
               {excelSheets.length > 1 && (
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   {excelSheets.map((sheet, idx) => (
                     <button
                       key={idx}
                       onClick={() => setCurrentSheet(idx)}
-                      className={`px-3 py-1 rounded text-sm transition ${
+                      className={`px-4 py-2 rounded text-sm transition font-semibold ${
                         currentSheet === idx
-                          ? "bg-blue-600 text-white"
-                          : "bg-white/10 text-white/70 hover:bg-white/20"
+                          ? "bg-blue-600 text-white shadow-lg"
+                          : "bg-white/10 text-white/70 hover:bg-white/20 border border-white/20"
                       }`}
                     >
                       {sheet.name}
@@ -301,15 +294,25 @@ export default function UltimateViewer() {
               )}
             </div>
 
-            <div className="bg-black/30 rounded-lg overflow-x-auto">
-              <table className="w-full text-sm border-collapse">
+            <div className="bg-black/30 rounded-lg overflow-auto max-h-[600px] border border-white/20">
+              <table className="w-full text-sm border-collapse font-mono">
                 <tbody>
                   {excelSheets[currentSheet]?.data?.map((row, rowIdx) => (
-                    <tr key={rowIdx} className="border-b border-white/10 hover:bg-white/5">
+                    <tr 
+                      key={rowIdx} 
+                      className={`border-b border-white/10 ${rowIdx === 0 ? 'bg-blue-600/30' : 'hover:bg-white/5'}`}
+                    >
+                      <td className="px-3 py-2 border-r border-white/10 text-white/70 min-w-[50px] text-right bg-black/40 font-semibold sticky left-0">
+                        {rowIdx + 1}
+                      </td>
                       {row.map((cell, cellIdx) => (
                         <td
                           key={cellIdx}
-                          className="px-4 py-2 border-r border-white/10 text-white/90 min-w-[100px]"
+                          className={`px-4 py-2 border-r border-white/10 min-w-[100px] ${
+                            rowIdx === 0 
+                              ? "text-white font-bold bg-blue-600/20" 
+                              : "text-white/90"
+                          }`}
                         >
                           {cell !== null && cell !== undefined ? String(cell) : ""}
                         </td>
@@ -323,8 +326,9 @@ export default function UltimateViewer() {
         )}
 
         {!file && (
-          <div className="text-center text-white/70 py-8">
-            <p>Upload a document to preview it here</p>
+          <div className="text-center text-white/70 py-12">
+            <p className="text-lg">Upload a document to preview it here</p>
+            <p className="text-sm mt-2">Supports PDF, DOCX, XLS, and XLSX files</p>
           </div>
         )}
       </div>
