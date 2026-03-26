@@ -1,5 +1,6 @@
 import { useState } from "react";
 import SEO from "@/components/SEO";
+import PageInfoSection from "@/components/PageInfoSection";
 
 export default function WordToPdf() {
   const [file, setFile] = useState(null);
@@ -104,6 +105,29 @@ export default function WordToPdf() {
 
         {!file && <p className="mt-4 text-white/70">Upload a Word document to get started.</p>}
       </div>
+      <PageInfoSection
+        aboutTitle="About Word to PDF"
+        aboutText="Word to PDF helps convert DOC and DOCX files into portable PDF documents that look consistent across devices. It is useful for sharing resumes, contracts, reports, and print-ready files."
+        howItWorks={[
+          "Upload a .doc or .docx document.",
+          "Start conversion to create a PDF version.",
+          "Download the converted PDF file.",
+        ]}
+        faqs={[
+          {
+            question: "Will document formatting be kept?",
+            answer: "Most standard formatting is preserved in the generated PDF output.",
+          },
+          {
+            question: "Can I convert DOCX files?",
+            answer: "Yes, both DOC and DOCX inputs are supported.",
+          },
+          {
+            question: "Why use PDF instead of Word for sharing?",
+            answer: "PDF is more consistent for viewing and printing across platforms.",
+          },
+        ]}
+      />
     </>
   );
 }

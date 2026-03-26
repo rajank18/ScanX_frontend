@@ -14,6 +14,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import SEO from "@/components/SEO";
+import PageInfoSection from "@/components/PageInfoSection";
 
 export default function PdfMerge() {
   const [pdfFiles, setPdfFiles] = useState([]);
@@ -202,6 +203,29 @@ export default function PdfMerge() {
       )}
       <p className="mt-2 text-white/70">Select multiple PDF files, reorder them, and merge into one.</p>
       </div>
+      <PageInfoSection
+        aboutTitle="About PDF Merger"
+        aboutText="PDF Merger combines multiple PDF documents into one file. It helps organize reports, invoices, chapters, and scans in the exact order you choose using drag-and-drop reordering."
+        howItWorks={[
+          "Upload two or more PDF files.",
+          "Drag cards to arrange the final page order.",
+          "Merge files and download one combined PDF.",
+        ]}
+        faqs={[
+          {
+            question: "Can I reorder PDFs before merging?",
+            answer: "Yes, drag and drop each file card into your preferred order before merging.",
+          },
+          {
+            question: "How many PDFs can I merge?",
+            answer: "You can merge multiple files as long as they are valid PDFs and manageable in your browser session.",
+          },
+          {
+            question: "Will original files be changed?",
+            answer: "No, merging creates a new output file while original source files remain unchanged.",
+          },
+        ]}
+      />
     </>
   );
 }

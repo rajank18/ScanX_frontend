@@ -2,6 +2,7 @@ import { useState } from "react";
 // ...existing code...
 import ScanPreview from "../components/ScanPreview";
 import SEO from "@/components/SEO";
+import PageInfoSection from "@/components/PageInfoSection";
 
 export default function Scan() {
   const [image, setImage] = useState(null);
@@ -112,6 +113,29 @@ export default function Scan() {
       {isLoading && <div className="mt-2 text-green-400">Scanning...</div>}
       {!image && <p className="mt-2 text-white/70">Upload an image to scan.</p>}
       </div>
+      <PageInfoSection
+        aboutTitle="About OCR Scan"
+        aboutText="The OCR Scan tool helps convert image-based documents into usable output formats like PNG and PDF. It is designed for receipts, notes, forms, and photo documents where you want a cleaner digital version."
+        howItWorks={[
+          "Upload or capture an image from your device.",
+          "Select your preferred output format (PNG or PDF).",
+          "Run scan and download the generated file.",
+        ]}
+        faqs={[
+          {
+            question: "What images work best for OCR scan?",
+            answer: "Clear, high-contrast images with readable text and minimal blur give the best results.",
+          },
+          {
+            question: "Can I scan photos from mobile?",
+            answer: "Yes, you can upload images from phone camera or gallery directly in the browser.",
+          },
+          {
+            question: "Can I output as PDF?",
+            answer: "Yes, choose PDF in the output dropdown before running scan.",
+          },
+        ]}
+      />
     </>
   );
 }

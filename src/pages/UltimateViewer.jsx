@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import SEO from "@/components/SEO";
 import WebViewer from "@pdftron/webviewer";
+import PageInfoSection from "@/components/PageInfoSection";
 
 const SUPPORTED_EXTENSIONS = ["pdf", "docx", "doc", "xlsx", "xls"];
 
@@ -12,6 +13,7 @@ export default function UltimateViewer() {
   const viewerRef = useRef(null);
   const viewerInstanceRef = useRef(null);
   const pendingDocumentUrlRef = useRef(null);
+  const pendingExtensionRef = useRef(null);
 
   useEffect(() => {
     if (!file || !viewerRef.current || viewerInstanceRef.current) return;
@@ -27,8 +29,15 @@ export default function UltimateViewer() {
         viewerInstanceRef.current = instance;
 
         if (pendingDocumentUrlRef.current) {
-          instance.UI.loadDocument(pendingDocumentUrlRef.current);
-          setIsLoading(false);
+          instance.UI
+            .loadDocument(pendingDocumentUrlRef.current, {
+              extension: pendingExtensionRef.current || undefined,
+            })
+            .then(() => setIsLoading(false))
+            .catch((error) => {
+              setErrorMessage(`Failed to load document in WebViewer. ${error.message || ""}`);
+              setIsLoading(false);
+            });
         }
       })
       .catch((error) => {
@@ -43,6 +52,7 @@ export default function UltimateViewer() {
         URL.revokeObjectURL(pendingDocumentUrlRef.current);
         pendingDocumentUrlRef.current = null;
       }
+      pendingExtensionRef.current = null;
     };
   }, []);
 
@@ -68,6 +78,7 @@ export default function UltimateViewer() {
       URL.revokeObjectURL(pendingDocumentUrlRef.current);
       pendingDocumentUrlRef.current = null;
     }
+    pendingExtensionRef.current = extension;
 
     const nextDocumentUrl = URL.createObjectURL(selectedFile);
     pendingDocumentUrlRef.current = nextDocumentUrl;
@@ -135,6 +146,30 @@ export default function UltimateViewer() {
             />
           </div>
         )}
+
+        <PageInfoSection
+          aboutTitle="About Ultimate Viewer"
+          aboutText="Ultimate Viewer lets you preview supported PDF, Word, and Excel files directly in your browser using WebViewer. It helps quickly inspect documents without downloading separate desktop apps."
+          howItWorks={[
+            "Upload a supported file like PDF, DOCX, or XLSX.",
+            "WebViewer loads the document in an interactive preview area.",
+            "Review content and upload another file anytime.",
+          ]}
+          faqs={[
+            {
+              question: "Which formats can I open?",
+              answer: "You can open supported formats like PDF, DOCX/DOC, and XLSX/XLS in this viewer flow.",
+            },
+            {
+              question: "Do I need to install software?",
+              answer: "No, preview happens directly in your browser.",
+            },
+            {
+              question: "Why did first-load errors happen earlier?",
+              answer: "The viewer now passes extension metadata correctly on first load to prevent parser mismatch errors.",
+            },
+          ]}
+        />
       </div>
     </>
   );

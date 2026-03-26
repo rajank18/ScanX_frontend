@@ -1,5 +1,6 @@
 import { useState } from "react";
 import SEO from "@/components/SEO";
+import PageInfoSection from "@/components/PageInfoSection";
 
 export default function PdfToWord() {
   const [file, setFile] = useState(null);
@@ -104,6 +105,29 @@ export default function PdfToWord() {
 
         {!file && <p className="mt-4 text-white/70">Upload a PDF file to get started.</p>}
       </div>
+      <PageInfoSection
+        aboutTitle="About PDF to Word"
+        aboutText="PDF to Word converts PDF documents into editable DOCX files so you can update content, reuse text, and continue document editing workflows in Word-compatible editors."
+        howItWorks={[
+          "Upload the source PDF file.",
+          "Run conversion to generate an editable Word document.",
+          "Download the DOCX output for editing.",
+        ]}
+        faqs={[
+          {
+            question: "Is the output editable?",
+            answer: "Yes, the generated DOCX file is intended for editing in Word-compatible tools.",
+          },
+          {
+            question: "Does this work for scanned PDFs?",
+            answer: "Scanned PDFs may require OCR quality support; text-based PDFs usually convert better.",
+          },
+          {
+            question: "Can I reuse converted content in reports?",
+            answer: "Yes, once converted to DOCX you can edit and reuse the content as needed.",
+          },
+        ]}
+      />
     </>
   );
 }

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ImageUpload from "../components/ImageUpload";
 import SEO from "@/components/SEO";
+import PageInfoSection from "@/components/PageInfoSection";
 
 export default function ImageCompress() {
   const [image, setImage] = useState(null);
@@ -129,6 +130,29 @@ export default function ImageCompress() {
       {isUploading && <div className="mt-2 text-green-400">Uploading...</div>}
       {!image && <p className="text-white/70">Upload a JPG/PNG image to compress.</p>}
       </div>
+      <PageInfoSection
+        aboutTitle="About Image Compression"
+        aboutText="Image Compression reduces JPG and PNG file sizes to improve page load speed, save bandwidth, and make uploads faster. It is ideal for website assets, social posts, forms, and email attachments."
+        howItWorks={[
+          "Upload a JPG or PNG image.",
+          "Choose desired quality and compression settings.",
+          "Compress and download the optimized image.",
+        ]}
+        faqs={[
+          {
+            question: "Can I keep good image quality after compression?",
+            answer: "Yes, adjust quality controls to keep a strong balance between clarity and file size.",
+          },
+          {
+            question: "What formats are supported?",
+            answer: "The tool supports common image formats like JPG and PNG.",
+          },
+          {
+            question: "Why compress images before upload?",
+            answer: "Smaller images upload faster and improve website performance and user experience.",
+          },
+        ]}
+      />
     </>
   );
 }

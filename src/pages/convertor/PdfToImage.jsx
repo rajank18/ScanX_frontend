@@ -1,5 +1,6 @@
 import { useState } from "react";
 import SEO from "@/components/SEO";
+import PageInfoSection from "@/components/PageInfoSection";
 
 export default function PdfToImage() {
   const [file, setFile] = useState(null);
@@ -108,6 +109,29 @@ export default function PdfToImage() {
 
         {!file && <p className="mt-4 text-white/70">Upload a PDF file to get started.</p>}
       </div>
+      <PageInfoSection
+        aboutTitle="About PDF to Images"
+        aboutText="PDF to Images extracts pages from a PDF and converts them into downloadable image files. It is useful when you need slide previews, social image snippets, or visual page sharing."
+        howItWorks={[
+          "Upload a PDF document.",
+          "Convert pages to image outputs.",
+          "Download each page image individually.",
+        ]}
+        faqs={[
+          {
+            question: "Will every PDF page be converted?",
+            answer: "Yes, each page is processed and listed as a separate downloadable image.",
+          },
+          {
+            question: "Can I download only selected pages?",
+            answer: "You can choose to download only the page images you need from the list.",
+          },
+          {
+            question: "Is this helpful for presentations?",
+            answer: "Yes, page images can be reused in slides, thumbnails, or design tools.",
+          },
+        ]}
+      />
     </>
   );
 }

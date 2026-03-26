@@ -6,6 +6,7 @@ import pdfCompressIcon from "../assets/pdfcompress.png";
 import imgCompressIcon from "../assets/imgcompress.png";
 import mergeIcon from "../assets/merge.png";
 import { useState } from "react";
+import PageInfoSection from "@/components/PageInfoSection";
 
 function FeatureCard({ to, title, subtitle, icon }) {
   return (
@@ -63,7 +64,30 @@ export default function Home() {
           <FeatureCard to="/image-compress" title="Image Compress" subtitle="Optimize PNG/JPG" icon={<img src={imgCompressIcon} alt="Image Compress" className="w-8 h-8 md:w-12 md:h-12" />} />
           <FeatureCard to="/merge-pdf" title="Merge PDFs" subtitle="Combine multiple" icon={<img src={mergeIcon} alt="Merge PDFs" className="w-8 h-8 md:w-12 md:h-12" />} />
         </div>
-      
+
+        <PageInfoSection
+          aboutTitle="About ScanX Toolkit"
+          aboutText="ScanX Toolkit is a free online platform for document processing, including conversion, OCR scanning, compression, PDF merging, and file viewing. Every tool runs in a simple browser workflow so users can quickly upload, process, and download files without installing desktop software."
+          howItWorks={[
+            "Choose a feature like converter, scanner, compressor, merger, or viewer.",
+            "Upload your document or image in the supported format.",
+            "Run the process and download the output file instantly.",
+          ]}
+          faqs={[
+            {
+              question: "Is ScanX Toolkit free to use?",
+              answer: "Yes, all core tools on ScanX Toolkit are available for free in the browser.",
+            },
+            {
+              question: "Which file types are supported?",
+              answer: "You can work with popular formats like PDF, JPG, PNG, DOCX, XLSX, and more depending on the selected feature.",
+            },
+            {
+              question: "Do I need to install anything?",
+              answer: "No installation is required. You can use all features directly online.",
+            },
+          ]}
+        />
       </div>
     </>
   )

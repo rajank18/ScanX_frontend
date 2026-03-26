@@ -1,5 +1,6 @@
 import { useState } from "react";
 import SEO from "@/components/SEO";
+import PageInfoSection from "@/components/PageInfoSection";
 
 export default function PdfCompress() {
   const [file, setFile] = useState(null);
@@ -150,6 +151,29 @@ export default function PdfCompress() {
 
         {!file && <p className="mt-4 text-white/70">Upload a PDF file to get started.</p>}
       </div>
+      <PageInfoSection
+        aboutTitle="About PDF Compression"
+        aboutText="PDF Compression reduces document size for faster sharing, uploads, and storage while trying to preserve readability. It is useful for email attachments, web uploads, and reducing archive space usage."
+        howItWorks={[
+          "Upload your PDF file from your device.",
+          "Adjust quality level based on your preferred size and clarity.",
+          "Compress and download the optimized PDF.",
+        ]}
+        faqs={[
+          {
+            question: "Will compression reduce PDF quality?",
+            answer: "Higher compression can reduce quality. Use the quality slider to balance size and visual clarity.",
+          },
+          {
+            question: "Can I see file size reduction?",
+            answer: "Yes, the page shows original size, compressed size, and percentage reduction.",
+          },
+          {
+            question: "Is this useful for email attachments?",
+            answer: "Yes, compressed PDFs are easier to send and upload to forms or portals.",
+          },
+        ]}
+      />
     </>
   );
 }

@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { HoverEffect } from "../components/ui/card-hover-effect";
 import SEO from "@/components/SEO";
+import PageInfoSection from "@/components/PageInfoSection";
 
 const conversionOptions = [
   {
@@ -65,6 +66,29 @@ export default function Convertor() {
       <p className="text-white/70 ">Select a conversion type below:</p>
       <HoverEffect items={conversionOptions} className="" />
       </div>
+      <PageInfoSection
+        aboutTitle="About Ultimate Converter"
+        aboutText="Ultimate Converter brings multiple document and image conversion workflows into one place. It supports common office and media format changes, making it easier to prepare files for sharing, editing, printing, or archiving."
+        howItWorks={[
+          "Pick a conversion option from the available tools.",
+          "Upload the source file in supported format.",
+          "Start conversion and download the processed result.",
+        ]}
+        faqs={[
+          {
+            question: "Can I convert both documents and images?",
+            answer: "Yes, the converter includes PDF, Word, Excel, JPG, and PNG workflows.",
+          },
+          {
+            question: "Do all converters have the same steps?",
+            answer: "Most tools follow the same pattern: upload, convert, and download.",
+          },
+          {
+            question: "Which converter should I choose?",
+            answer: "Select the card that matches your source and target formats, for example PDF to Word or JPG to PNG.",
+          },
+        ]}
+      />
     </>
   );
 }

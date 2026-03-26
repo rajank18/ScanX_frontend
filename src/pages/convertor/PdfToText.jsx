@@ -1,5 +1,6 @@
 import { useState } from "react";
 import SEO from "@/components/SEO";
+import PageInfoSection from "@/components/PageInfoSection";
 
 export default function PdfToText() {
   const [file, setFile] = useState(null);
@@ -114,6 +115,29 @@ export default function PdfToText() {
 
         {!file && <p className="mt-4 text-white/70">Upload a PDF file to get started.</p>}
       </div>
+      <PageInfoSection
+        aboutTitle="About PDF to Text"
+        aboutText="PDF to Text extracts readable text content from PDF documents and lets you download it as a plain TXT file. It is ideal for quick copy, search, summarization, and content reuse workflows."
+        howItWorks={[
+          "Upload the PDF you want to process.",
+          "Extract text content from the file.",
+          "Review text and download as a .txt document.",
+        ]}
+        faqs={[
+          {
+            question: "Can I copy extracted text directly?",
+            answer: "Yes, extracted text is shown in a textarea so you can copy it before downloading.",
+          },
+          {
+            question: "Will scanned image-only PDFs work?",
+            answer: "Image-only PDFs may need OCR-based extraction for best results.",
+          },
+          {
+            question: "What format is downloaded?",
+            answer: "The output is downloaded as a plain text (.txt) file.",
+          },
+        ]}
+      />
     </>
   );
 }
