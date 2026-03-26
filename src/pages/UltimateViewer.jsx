@@ -14,7 +14,7 @@ export default function UltimateViewer() {
   const pendingDocumentUrlRef = useRef(null);
 
   useEffect(() => {
-    if (!viewerRef.current || viewerInstanceRef.current) return;
+    if (!file || !viewerRef.current || viewerInstanceRef.current) return;
 
     WebViewer(
       {
@@ -35,7 +35,7 @@ export default function UltimateViewer() {
         setErrorMessage(`Failed to initialize WebViewer. ${error.message || ""}`);
         setIsLoading(false);
       });
-  }, []);
+  }, [file]);
 
   useEffect(() => {
     return () => {
@@ -50,17 +50,19 @@ export default function UltimateViewer() {
     const selectedFile = event.target.files?.[0];
     if (!selectedFile) return;
 
-    setFile(selectedFile);
     setErrorMessage("");
     setIsLoading(true);
 
     const extension = selectedFile.name.split(".").pop()?.toLowerCase() || "";
 
     if (!SUPPORTED_EXTENSIONS.includes(extension)) {
+      setFile(null);
       setErrorMessage("Unsupported file type. Please upload PDF, DOCX, DOC, XLSX, or XLS files.");
       setIsLoading(false);
       return;
     }
+
+    setFile(selectedFile);
 
     if (pendingDocumentUrlRef.current) {
       URL.revokeObjectURL(pendingDocumentUrlRef.current);
@@ -124,13 +126,15 @@ export default function UltimateViewer() {
           </div>
         )}
 
-        <div className="backdrop-blur-md p-4 rounded-2xl border border-white/20">
-          <div
-            ref={viewerRef}
-            className="bg-black/40 rounded-lg overflow-hidden"
-            style={{ height: "700px", width: "100%" }}
-          />
-        </div>
+        {file && (
+          <div className="backdrop-blur-md p-4 rounded-2xl border border-white/20">
+            <div
+              ref={viewerRef}
+              className="bg-black/40 rounded-lg overflow-hidden"
+              style={{ height: "700px", width: "100%" }}
+            />
+          </div>
+        )}
       </div>
     </>
   );
