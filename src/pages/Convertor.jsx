@@ -20,11 +20,11 @@ const conversionOptions = [
     description: "Convert Word documents to PDF format.",
     link: "/convertor/word-to-pdf"
   },
-  {
-    title: "PDF to Word",
-    description: "Convert PDF files to editable Word documents.",
-    link: "/convertor/pdf-to-word"
-  },
+  // {
+  //   title: "PDF to Word",
+  //   description: "Convert PDF files to editable Word documents.",
+  //   link: "/convertor/pdf-to-word"
+  // },
   {
     title: "JPG to PNG",
     description: "Convert JPG images to PNG format.",
@@ -55,16 +55,16 @@ const conversionOptions = [
 export default function Convertor() {
   return (
     <>
-      <SEO 
+      <SEO
         title="Free File Converter - Convert PDF, Images, Word, Excel Online"
         description="Free online file converter. Convert between PDF, images (JPG, PNG), Word, Excel, and more. Image to PDF, PDF to Word, Excel to PDF, and many more conversions."
         keywords="file converter, pdf converter, image to pdf, word to pdf, pdf to word, excel to pdf, pdf to excel, jpg to png, png to jpg, pdf to text, online converter"
         canonical="/convertor"
       />
       <div className="w-full max-w-3xl mx-auto text-gray-100 backdrop-blur-md pr-5 pl-6 pt-4 pb-4 rounded-2xl border border-white/20 text-center">
-      <h2 className="text-2xl md:text-3xl font-semibold mb-4">Ultimate Converter</h2>
-      <p className="text-white/70 ">Select a conversion type below:</p>
-      <HoverEffect items={conversionOptions} className="" />
+        <h2 className="text-2xl md:text-3xl font-semibold mb-4">Ultimate Converter</h2>
+        <p className="text-white/70 ">Select a conversion type below:</p>
+        <HoverEffect items={conversionOptions} className="" />
       </div>
       <PageInfoSection
         aboutTitle="About Ultimate Converter"
