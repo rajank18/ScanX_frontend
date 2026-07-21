@@ -5,7 +5,7 @@ export default function PageInfoSection({
   faqs = [],
 }) {
   return (
-    <section className="w-full max-w-3xl mx-auto mt-6 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-gray-100">
+    <section className="w-full max-w-3xl mx-auto mt-16 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-gray-100">
       <h3 className="text-xl md:text-2xl font-semibold mb-3">{aboutTitle}</h3>
       <p className="text-white/80 leading-relaxed mb-6">{aboutText}</p>
 

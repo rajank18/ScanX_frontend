@@ -19,7 +19,7 @@ function FeatureCard({ to, title, subtitle, icon }) {
       >
         <div
           className="card w-full h-full rounded-[16px] p-3 md:p-5 flex flex-col items-center justify-center"
-          style={{ background: "#021012" }}
+          style={{ background: "#102d25ff" }}
         >
           <div className="w-10 h-10 md:w-16 md:h-16 rounded-xl bg-white flex items-center justify-center border border-white/15">
             {icon}
@@ -40,7 +40,7 @@ export default function Home() {
 
   return (
     <>
-      <SEO 
+      <SEO
         title="Free Online PDF & Image Converter, OCR Scanner & Compression Tool"
         description="ScanX Toolkit offers free online tools for OCR scanning, PDF conversion, image compression, and file merging. Convert images to PDF, compress files, merge PDFs, and more - all in your browser!"
         keywords="scanx, scanx toolkit, pdf converter, image to pdf, ocr scanner, pdf compression, merge pdf, image compressor, word to pdf, pdf to word, online pdf tools"
@@ -59,7 +59,7 @@ export default function Home() {
             subtitle="All file conversions in one place"
             icon={<img src={mergeIcon} alt="Ultimate Converter" className="w-8 h-8 md:w-12 md:h-12" />}
           />
-          <FeatureCard to="/scan" title="OCR Scan" subtitle="Image → PDF/PNG" icon={<img src={scanIcon} alt="OCR Scan" className="w-8 h-8 md:w-12 md:h-12" />} />
+          <FeatureCard to="/scan" title="CamScanner" subtitle="Image → PDF/PNG" icon={<img src={scanIcon} alt="OCR Scan" className="w-8 h-8 md:w-12 md:h-12" />} />
           <FeatureCard to="/viewer" title="Ultimate Viewer" subtitle="View PDF/DOCX/Excel" icon={<img src={viewer} alt="Ultimate Viewer" className="w-8 h-8 md:w-12 md:h-12" />} />
 
           <FeatureCard to="/image-compress" title="Image Compress" subtitle="Optimize PNG/JPG" icon={<img src={imgCompressIcon} alt="Image Compress" className="w-8 h-8 md:w-12 md:h-12" />} />
