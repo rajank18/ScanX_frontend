@@ -5,10 +5,10 @@ export default function SEO({
   description, 
   keywords, 
   canonical,
-  ogImage = "https://scanx-two.vercel.app/src/assets/logo.png",
+  ogImage = "https://goscanx.vercel.app/logo.png",
   ogType = "website"
 }) {
-  const baseUrl = "https://scanx-two.vercel.app";
+  const baseUrl = "https://goscanx.vercel.app";
   const fullTitle = title ? `${title} | ScanX Toolkit` : "ScanX Toolkit - Free Online PDF & Image Converter, OCR Scanner & Compression Tool";
   const fullCanonical = canonical ? `${baseUrl}${canonical}` : baseUrl;
   

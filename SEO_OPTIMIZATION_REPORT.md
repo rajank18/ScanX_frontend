@@ -149,7 +149,7 @@ With these optimizations:
 
 ## 🔍 Next Steps
 
-1. **Deploy these changes** to production (scanx-two.vercel.app)
+1. **Deploy these changes** to production (goscanx.vercel.app)
 2. **Submit updated sitemap** to Google Search Console
 3. **Monitor** search rankings weekly using tools like:
    - Google Search Console
