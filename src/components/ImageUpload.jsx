@@ -1,12 +1,7 @@
-import { useState } from "react";
-
 export default function ImageUpload({ onImageSelect }) {
-  const [preview, setPreview] = useState(null);
-
   const handleFileChange = (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length) {
-      setPreview(URL.createObjectURL(files[0]));
+    const files = Array.from(e.target.files || []);
+    if (files.length > 0 && typeof onImageSelect === "function") {
       onImageSelect(files[0]); // Pass only the first file
     }
   };

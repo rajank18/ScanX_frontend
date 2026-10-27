@@ -39,9 +39,23 @@ export default function ImageToPdf() {
       for (const imageFile of images) {
         const bytes = await imageFile.arrayBuffer();
         const isPng = imageFile.type === "image/png" || imageFile.name.toLowerCase().endsWith(".png");
-        const embeddedImage = isPng
-          ? await pdfDoc.embedPng(bytes)
-          : await pdfDoc.embedJpg(bytes);
+        let embeddedImage;
+        try {
+          embeddedImage = isPng
+            ? await pdfDoc.embedPng(bytes)
+            : await pdfDoc.embedJpg(bytes);
+        } catch {
+          // Fallback: convert any image type (WebP, AVIF, BMP, GIF, etc.) via canvas to clean PNG
+          const imgBitmap = await createImageBitmap(imageFile);
+          const canvas = document.createElement("canvas");
+          canvas.width = imgBitmap.width;
+          canvas.height = imgBitmap.height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(imgBitmap, 0, 0);
+          const cleanBlob = await new Promise((res) => canvas.toBlob(res, "image/png"));
+          const cleanBytes = await cleanBlob.arrayBuffer();
+          embeddedImage = await pdfDoc.embedPng(cleanBytes);
+        }
 
         const page = pdfDoc.addPage([embeddedImage.width, embeddedImage.height]);
         page.drawImage(embeddedImage, {

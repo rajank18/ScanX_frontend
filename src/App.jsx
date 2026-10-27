@@ -36,7 +36,7 @@ function App() {
           <nav className="hidden md:flex gap-3 text-sm md:text-base text-white/80">
             <Link className="hover:text-white" to="/convertor">Convertors</Link>
             <Link className="hover:text-white" to="/scan">Scanner</Link>
-            {/* <Link className="hover:text-white" to="/pdf-compress">PDF Compress</Link> */}
+            <Link className="hover:text-white" to="/pdf-compress">PDF Compress</Link>
             <Link className="hover:text-white" to="/image-compress">Image Compress</Link>
             <Link className="hover:text-white" to="/merge-pdf">Merge PDFs</Link>
             <Link className="hover:text-white" to="/viewer">Viewer</Link>
@@ -47,7 +47,7 @@ function App() {
             <div className="absolute top-full left-0 right-0 bg-black/90 border-b border-white/10 md:hidden">
               <nav className="flex flex-col gap-2 p-4 text-sm text-white/80">
                 <Link className="hover:text-white py-1" to="/scan" onClick={() => setIsMenuOpen(false)}>OCR Scan</Link>
-                {/* <Link className="hover:text-white py-1" to="/pdf-compress" onClick={() => setIsMenuOpen(false)}>PDF Compress</Link> */}
+                <Link className="hover:text-white py-1" to="/pdf-compress" onClick={() => setIsMenuOpen(false)}>PDF Compress</Link>
                 <Link className="hover:text-white py-1" to="/image-compress" onClick={() => setIsMenuOpen(false)}>Image Compress</Link>
                 <Link className="hover:text-white py-1" to="/merge-pdf" onClick={() => setIsMenuOpen(false)}>Merge PDFs</Link>
                 <Link className="hover:text-white py-1" to="/viewer" onClick={() => setIsMenuOpen(false)}>Viewer</Link>

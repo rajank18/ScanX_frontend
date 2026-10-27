@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SEO from "@/components/SEO";
 import PageInfoSection from "@/components/PageInfoSection";
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
@@ -11,6 +11,17 @@ export default function PdfToImage() {
   const [imageUrls, setImageUrls] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  // Clean up all generated blob URLs on unmount or file reset
+  useEffect(() => {
+    return () => {
+      imageUrls.forEach((url) => {
+        if (url && url.startsWith("blob:")) {
+          URL.revokeObjectURL(url);
+        }
+      });
+    };
+  }, [imageUrls]);
 
   const handleFileSelect = (e) => {
     const selectedFile = e.target.files[0];

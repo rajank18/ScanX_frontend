@@ -2,8 +2,8 @@ const DEFAULT_API_URL = "http://localhost:5000";
 
 export function getApiBaseUrl() {
   const configured = import.meta.env.VITE_API_URL;
-  if (configured && configured.trim()) {
-    return configured.trim().replace(/\/$/, "");
+  if (configured && typeof configured === 'string' && configured.trim() && configured.trim() !== 'undefined') {
+    return configured.trim().replace(/\/+$/, "");
   }
   return DEFAULT_API_URL;
 }

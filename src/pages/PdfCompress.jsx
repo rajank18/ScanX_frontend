@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SEO from "@/components/SEO";
 import PageInfoSection from "@/components/PageInfoSection";
 import { apiFetch } from "@/lib/api";
@@ -13,11 +13,20 @@ export default function PdfCompress() {
   const [reductionPercent, setReductionPercent] = useState(null);
   const [quality, setQuality] = useState(70);
 
+  useEffect(() => {
+    return () => {
+      if (compressedBlobUrl) URL.revokeObjectURL(compressedBlobUrl);
+    };
+  }, [compressedBlobUrl]);
+
   const handleFileSelect = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       setFile(selectedFile);
-      setCompressedBlobUrl(null);
+      setCompressedBlobUrl((prev) => {
+        if (prev) URL.revokeObjectURL(prev);
+        return null;
+      });
       setOriginalSize(null);
       setCompressedSize(null);
       setReductionPercent(null);
@@ -49,7 +58,9 @@ export default function PdfCompress() {
       const compressedFileSize = blob.size;
       setCompressedSize(compressedFileSize);
 
-      const reduction = Math.round(((file.size - compressedFileSize) / file.size) * 100);
+      const reduction = file.size > 0 
+        ? Math.max(0, Math.round(((file.size - compressedFileSize) / file.size) * 100))
+        : 0;
       setReductionPercent(reduction);
 
       const objectUrl = URL.createObjectURL(blob);

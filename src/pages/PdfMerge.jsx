@@ -90,7 +90,13 @@ export default function PdfMerge() {
             title="Remove"
             style={{background: 'none', border: 'none'}}
           >✖</button>
-          <a href={getPreviewUrl(file)} target="_blank" rel="noopener noreferrer" className="text-blue-400 p-1 text-xs flex items-center justify-center" title="Preview">👁</a>
+          <button
+            type="button"
+            onClick={() => handlePreviewFile(file)}
+            className="text-blue-400 hover:text-blue-300 p-1 text-xs flex items-center justify-center cursor-pointer"
+            title="Preview PDF"
+            style={{background: 'none', border: 'none'}}
+          >👁</button>
         </div>
         <span
           className="cursor-move text-green-400 absolute top-2 right-2 text-lg"
@@ -106,11 +112,15 @@ export default function PdfMerge() {
     setPdfFiles(files => files.filter((_, i) => i !== idx));
   };
 
-  // PDF preview logic (first page as image)
-  // NOTE: This is a placeholder. For real preview, use pdfjs-dist or similar library.
-  const getPreviewUrl = (file) => {
-    // For now, just return a blob URL for download, not a real preview
-    return URL.createObjectURL(file);
+  // Safe PDF preview: opens a temporary URL on demand and frees memory after viewing
+  const handlePreviewFile = (file) => {
+    try {
+      const url = URL.createObjectURL(file);
+      window.open(url, '_blank', 'noopener,noreferrer');
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+    } catch (err) {
+      console.error('Failed to preview PDF:', err);
+    }
   };
 
   // Merge PDFs (to be connected to backend)

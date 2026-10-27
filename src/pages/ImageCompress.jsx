@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ImageUpload from "../components/ImageUpload";
 import SEO from "@/components/SEO";
 import PageInfoSection from "@/components/PageInfoSection";
@@ -6,6 +6,7 @@ import { compressAccurately } from "image-conversion";
 
 export default function ImageCompress() {
   const [image, setImage] = useState(null);
+  const [originalPreviewUrl, setOriginalPreviewUrl] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isCompressing, setIsCompressing] = useState(false);
   const [compressedBlobUrl, setCompressedBlobUrl] = useState(null);
@@ -15,6 +16,26 @@ export default function ImageCompress() {
   const [originalSize, setOriginalSize] = useState(null);
   const [compressedSize, setCompressedSize] = useState(null);
   const [reductionPercent, setReductionPercent] = useState(null);
+
+  useEffect(() => {
+    return () => {
+      if (originalPreviewUrl) URL.revokeObjectURL(originalPreviewUrl);
+      if (compressedBlobUrl) URL.revokeObjectURL(compressedBlobUrl);
+    };
+  }, [originalPreviewUrl, compressedBlobUrl]);
+
+  const handleImageSelect = (file) => {
+    if (originalPreviewUrl) URL.revokeObjectURL(originalPreviewUrl);
+    if (compressedBlobUrl) URL.revokeObjectURL(compressedBlobUrl);
+
+    setImage(file);
+    setOriginalPreviewUrl(file instanceof Blob ? URL.createObjectURL(file) : null);
+    setCompressedBlobUrl(null);
+    setOriginalSize(null);
+    setCompressedSize(null);
+    setReductionPercent(null);
+    setErrorMessage("");
+  };
 
   const handleCompress = async () => {
     if (!image || !(image instanceof File || image instanceof Blob)) {
@@ -42,9 +63,11 @@ export default function ImageCompress() {
         return objectUrl;
       });
 
-      // Calculate reduction percentage
+      // Calculate reduction percentage safely
       if (image.size && blob.size) {
-        const reduction = (((image.size - blob.size) / image.size) * 100).toFixed(2);
+        const reduction = image.size > 0
+          ? Math.max(0, (((image.size - blob.size) / image.size) * 100)).toFixed(2)
+          : "0.00";
         setReductionPercent(reduction);
       }
     } catch (err) {
@@ -67,13 +90,7 @@ export default function ImageCompress() {
       />
       <div className="w-full max-w-3xl mx-auto text-gray-100 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center">
         <h2 className="text-2xl md:text-3xl font-semibold mb-4">Image Compression</h2>
-      <ImageUpload onImageSelect={(file) => { 
-        setImage(file); 
-        setCompressedBlobUrl(null); 
-        setOriginalSize(null);
-        setCompressedSize(null);
-        setReductionPercent(null);
-      }} />
+      <ImageUpload onImageSelect={handleImageSelect} />
       {errorMessage && (
         <div className="text-red-400 mb-2">{errorMessage}</div>
       )}
@@ -93,7 +110,7 @@ export default function ImageCompress() {
           <div className="flex flex-col md:flex-row gap-6 items-center justify-center w-full">
             <div className="flex flex-col items-center">
               <span className="text-sm text-white/70 mb-1">Original</span>
-              <img src={image instanceof Blob ? URL.createObjectURL(image) : undefined} alt="original" className="w-64 h-auto rounded-md shadow-md mb-2 max-w-full object-contain" />
+              <img src={originalPreviewUrl || undefined} alt="original" className="w-64 h-auto rounded-md shadow-md mb-2 max-w-full object-contain" />
             </div>
             {compressedBlobUrl && (
               <div className="flex flex-col items-center">
