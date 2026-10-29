@@ -14,23 +14,27 @@ import MicroSlats from "@/components/ui/MicroSlats";
 
 function FeatureCard({ to, title, subtitle, icon }) {
   return (
-    <CometCard>
+    <CometCard className="w-full flex justify-center">
       <Link
         to={to}
-        className="group relative w-full max-w-[155px] sm:max-w-[190px] md:max-w-[210px] aspect-square flex items-center justify-center transition-all duration-300 hover:-translate-y-1"
+        className="group relative w-full aspect-square max-w-[170px] sm:max-w-[210px] md:max-w-[230px] flex items-center justify-center transition-all duration-300 hover:-translate-y-1"
         aria-label={title}
       >
         <div
-          className="card w-full h-full rounded-[16px] sm:rounded-[20px] p-2.5 sm:p-4 md:p-5 flex flex-col items-center justify-center border border-white/10 shadow-lg transition-all duration-300 group-hover:border-white/25 group-hover:shadow-emerald-500/10"
-          style={{ background: "rgba(13, 38, 32, 0.92)" }}
+          className="w-full h-full rounded-2xl p-3 sm:p-4 md:p-5 flex flex-col items-center justify-center border border-white/15 shadow-2xl transition-all duration-300 group-hover:border-emerald-500/50 group-hover:shadow-emerald-500/20 bg-black"
+          style={{ backgroundColor: "#000000" }}
         >
-          <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-xl sm:rounded-2xl bg-white/10 group-hover:bg-white/15 group-hover:scale-105 transition-all duration-300 flex items-center justify-center border border-white/15 shadow-inner">
+          <div className="w-11 h-11 sm:w-13 sm:h-13 md:w-16 md:h-16 rounded-xl sm:rounded-2xl bg-white/10 group-hover:bg-white/15 group-hover:scale-105 transition-all duration-300 flex items-center justify-center border border-white/15 shadow-inner shrink-0">
             {icon}
           </div>
-          <div className="text-center mt-1.5 sm:mt-2 md:mt-3 w-full px-1">
-            <div className="text-xs sm:text-sm md:text-lg font-semibold tracking-wide text-white transition-colors truncate">{title}</div>
+          <div className="text-center mt-2 sm:mt-3 w-full px-1 flex flex-col items-center justify-center">
+            <div className="text-xs sm:text-sm md:text-base font-semibold tracking-wide text-white transition-colors truncate w-full text-center">
+              {title}
+            </div>
             {subtitle && (
-              <div className="text-[10px] sm:text-xs text-white/60 mt-0.5 md:mt-1 md:text-sm truncate">{subtitle}</div>
+              <div className="text-[10px] sm:text-xs text-white/60 mt-0.5 md:mt-1 truncate w-full text-center">
+                {subtitle}
+              </div>
             )}
           </div>
         </div>
@@ -88,7 +92,7 @@ export default function Home() {
         </div>
 
         {/* 2 columns on phone/mobile, 2 on tablet, 3 on desktop */}
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 place-items-center">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 justify-items-center items-center">
           <FeatureCard
             to="/convertor"
             title="Ultimate Converter"
