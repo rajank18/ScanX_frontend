@@ -24,7 +24,7 @@ function FeatureCard({ to, title, subtitle, icon }) {
           className="w-full h-full rounded-2xl p-3 sm:p-4 md:p-5 flex flex-col items-center justify-center border border-white/15 shadow-2xl transition-all duration-300 group-hover:border-emerald-500/50 group-hover:shadow-emerald-500/20 bg-black"
           style={{ backgroundColor: "#000000" }}
         >
-          <div className="w-11 h-11 sm:w-13 sm:h-13 md:w-16 md:h-16 rounded-xl sm:rounded-2xl bg-white/10 group-hover:bg-white/15 group-hover:scale-105 transition-all duration-300 flex items-center justify-center border border-white/15 shadow-inner shrink-0">
+          <div className="w-11 h-11 sm:w-13 sm:h-13 md:w-16 md:h-16 rounded-xl sm:rounded-2xl bg-white/10 group-hover:bg-white/15 group-hover:scale-105 transition-all duration-300 flex items-center justify-center border border-white shadow-sm shrink-0">
             {icon}
           </div>
           <div className="text-center mt-2 sm:mt-3 w-full px-1 flex flex-col items-center justify-center">
@@ -97,38 +97,38 @@ export default function Home() {
             to="/convertor"
             title="Ultimate Converter"
             subtitle="All file conversions in one place"
-            icon={<ArrowsLeftRight size={32} weight="duotone" className="text-teal-300" />}
+            icon={<ArrowsLeftRight size={32} weight="duotone" className="text-white" />}
           />
           <FeatureCard
             to="/scan"
             title="Doc Enhancer"
             subtitle="Photo → Clean PDF/PNG"
-            icon={<MagicWand size={32} weight="duotone" className="text-emerald-300" />}
+            icon={<MagicWand size={32} weight="duotone" className="text-white" />}
           />
           <FeatureCard
             to="/viewer"
             title="Ultimate Viewer"
             subtitle="View PDF/DOCX/Excel"
-            icon={<FileMagnifyingGlass size={32} weight="duotone" className="text-cyan-300" />}
+            icon={<FileMagnifyingGlass size={32} weight="duotone" className="text-white" />}
           />
 
           <FeatureCard
             to="/compress"
             title="Compressor"
             subtitle="Compress PDF & Images"
-            icon={<FileArchive size={32} weight="duotone" className="text-amber-300" />}
+            icon={<FileArchive size={32} weight="duotone" className="text-white" />}
           />
           <FeatureCard
             to="/merge-pdf"
             title="Merge PDFs"
             subtitle="Combine multiple"
-            icon={<Files size={32} weight="duotone" className="text-indigo-300" />}
+            icon={<Files size={32} weight="duotone" className="text-white" />}
           />
           <FeatureCard
             to="/colab-to-pdf"
             title="Colab Link to PDF"
             subtitle="Google Colab Link → PDF"
-            icon={<FileCode size={32} weight="duotone" className="text-orange-300" />}
+            icon={<FileCode size={32} weight="duotone" className="text-white" />}
           />
         </div>
 
