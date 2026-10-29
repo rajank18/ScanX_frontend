@@ -857,7 +857,15 @@ const MicroSlats = ({
     const onPointerMove = e => {
       const s = settingsRef.current;
       const spot = locate(e);
-      if (!fluid || !s || !s.interactive || reducedMotion || !spot.inside) {
+      // Do not trigger background fluid effect when cursor is over cards or interactive elements
+      if (
+        !fluid ||
+        !s ||
+        !s.interactive ||
+        reducedMotion ||
+        !spot.inside ||
+        e.target?.closest?.('a, button, .card, .no-slat-effect')
+      ) {
         pointer.tracked = false;
         return;
       }
@@ -872,7 +880,14 @@ const MicroSlats = ({
     const onPointerDown = e => {
       const s = settingsRef.current;
       const spot = locate(e);
-      if (!fluid || !s || !s.interactive || reducedMotion || !spot.inside) return;
+      if (
+        !fluid ||
+        !s ||
+        !s.interactive ||
+        reducedMotion ||
+        !spot.inside ||
+        e.target?.closest?.('a, button, .card, .no-slat-effect')
+      ) return;
       splashTurn += 2.39996;
       queue(spot.u, spot.v, 0, 0, splashTurn);
     };

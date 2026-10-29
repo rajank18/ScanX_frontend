@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { CometCard } from "@/components/ui/comet-card";
+
 import SEO from "@/components/SEO";
 import {
   ArrowsLeftRight,
@@ -14,32 +14,26 @@ import MicroSlats from "@/components/ui/MicroSlats";
 
 function FeatureCard({ to, title, subtitle, icon }) {
   return (
-    <CometCard className="w-full flex justify-center">
-      <Link
-        to={to}
-        className="group relative w-full aspect-square max-w-[170px] sm:max-w-[210px] md:max-w-[230px] flex items-center justify-center transition-all duration-300 hover:-translate-y-1"
-        aria-label={title}
-      >
-        <div
-          className="w-full h-full rounded-2xl p-3 sm:p-4 md:p-5 flex flex-col items-center justify-center border border-white/15 shadow-2xl transition-all duration-300 group-hover:border-emerald-500/50 group-hover:shadow-emerald-500/20 bg-black"
-          style={{ backgroundColor: "#000000" }}
-        >
-          <div className="w-11 h-11 sm:w-13 sm:h-13 md:w-16 md:h-16 rounded-xl sm:rounded-2xl bg-white/10 group-hover:bg-white/15 group-hover:scale-105 transition-all duration-300 flex items-center justify-center border border-white shadow-sm shrink-0">
-            {icon}
-          </div>
-          <div className="text-center mt-2 sm:mt-3 w-full px-1 flex flex-col items-center justify-center">
-            <div className="text-xs sm:text-sm md:text-base font-semibold tracking-wide text-white transition-colors truncate w-full text-center">
-              {title}
-            </div>
-            {subtitle && (
-              <div className="text-[10px] sm:text-xs text-white/60 mt-0.5 md:mt-1 truncate w-full text-center">
-                {subtitle}
-              </div>
-            )}
-          </div>
+    <Link
+      to={to}
+      className="no-slat-effect group relative w-full aspect-square max-w-[170px] sm:max-w-[210px] md:max-w-[230px] rounded-2xl p-3 sm:p-4 md:p-5 flex flex-col items-center justify-center border border-white/15 shadow-2xl transition-all duration-300 hover:-translate-y-1.5 hover:border-emerald-500/50 hover:shadow-emerald-500/20 bg-black cursor-pointer select-none"
+      style={{ backgroundColor: "#000000" }}
+      aria-label={title}
+    >
+      <div className="w-11 h-11 sm:w-13 sm:h-13 md:w-16 md:h-16 rounded-xl sm:rounded-2xl bg-white/10 group-hover:bg-white/15 group-hover:scale-105 transition-all duration-300 flex items-center justify-center border border-white shadow-sm shrink-0">
+        {icon}
+      </div>
+      <div className="text-center mt-2 sm:mt-3 w-full px-1 flex flex-col items-center justify-center">
+        <div className="text-xs sm:text-sm md:text-base font-semibold tracking-wide text-white transition-colors truncate w-full text-center">
+          {title}
         </div>
-      </Link>
-    </CometCard>
+        {subtitle && (
+          <div className="text-[10px] sm:text-xs text-white/60 mt-0.5 md:mt-1 truncate w-full text-center">
+            {subtitle}
+          </div>
+        )}
+      </div>
+    </Link>
   );
 }
 
