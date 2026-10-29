@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
 import { CometCard } from "@/components/ui/comet-card";
 import SEO from "@/components/SEO";
-import scanIcon from "../assets/scan.png";
-import pdfCompressIcon from "../assets/pdfcompress.png";
-import imgCompressIcon from "../assets/imgcompress.png";
-import viewer from "../assets/viewer.jpg";
-import mergeIcon from "../assets/merge.png";
-import { useState } from "react";
+import {
+  ArrowsLeftRight,
+  MagicWand,
+  FileMagnifyingGlass,
+  FileArchive,
+  Files,
+  FileCode,
+} from "@phosphor-icons/react";
 import PageInfoSection from "@/components/PageInfoSection";
 
 function FeatureCard({ to, title, subtitle, icon }) {
@@ -14,18 +16,18 @@ function FeatureCard({ to, title, subtitle, icon }) {
     <CometCard>
       <Link
         to={to}
-        className="group relative w-[280px] max-w-[200px] aspect-square flex items-center justify-center transition-transform hover:-translate-y-0.5"
+        className="group relative w-[280px] max-w-[200px] aspect-square flex items-center justify-center transition-all duration-300 hover:-translate-y-1"
         aria-label={title}
       >
         <div
-          className="card w-full h-full rounded-[16px] p-3 md:p-5 flex flex-col items-center justify-center"
-          style={{ background: "#102d25ff" }}
+          className="card w-full h-full rounded-[18px] p-3 md:p-5 flex flex-col items-center justify-center border border-white/10 shadow-lg transition-colors group-hover:border-white/20"
+          style={{ background: "#0d2620" }}
         >
-          <div className="w-10 h-10 md:w-16 md:h-16 rounded-xl bg-white flex items-center justify-center border border-white/15">
+          <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-white/10 group-hover:bg-white/15 group-hover:scale-105 transition-all duration-300 flex items-center justify-center border border-white/15 shadow-inner">
             {icon}
           </div>
           <div className="text-center mt-2 md:mt-3">
-            <div className="text-sm md:text-lg font-semibold">{title}</div>
+            <div className="text-sm md:text-lg font-semibold tracking-wide text-white group-hover:text-white transition-colors">{title}</div>
             {subtitle && (
               <div className="text-xs text-white/60 mt-1 md:text-sm">{subtitle}</div>
             )}
@@ -37,7 +39,6 @@ function FeatureCard({ to, title, subtitle, icon }) {
 }
 
 export default function Home() {
-
   return (
     <>
       <SEO
@@ -57,24 +58,38 @@ export default function Home() {
             to="/convertor"
             title="Ultimate Converter"
             subtitle="All file conversions in one place"
-            icon={<img src={mergeIcon} alt="Ultimate Converter" className="w-8 h-8 md:w-12 md:h-12" />}
+            icon={<ArrowsLeftRight size={34} weight="duotone" className="text-teal-300" />}
           />
-          <FeatureCard to="/scan" title="Doc Enhancer" subtitle="Photo → Clean PDF/PNG" icon={<img src={scanIcon} alt="Doc Enhancer" className="w-8 h-8 md:w-12 md:h-12" />} />
-          <FeatureCard to="/viewer" title="Ultimate Viewer" subtitle="View PDF/DOCX/Excel" icon={<img src={viewer} alt="Ultimate Viewer" className="w-8 h-8 md:w-12 md:h-12" />} />
+          <FeatureCard
+            to="/scan"
+            title="Doc Enhancer"
+            subtitle="Photo → Clean PDF/PNG"
+            icon={<MagicWand size={34} weight="duotone" className="text-emerald-300" />}
+          />
+          <FeatureCard
+            to="/viewer"
+            title="Ultimate Viewer"
+            subtitle="View PDF/DOCX/Excel"
+            icon={<FileMagnifyingGlass size={34} weight="duotone" className="text-cyan-300" />}
+          />
 
-          <FeatureCard to="/compress" title="Compressor" subtitle="Compress PDF & Images" icon={<img src={pdfCompressIcon} alt="Compressor" className="w-8 h-8 md:w-12 md:h-12" />} />
-          <FeatureCard to="/merge-pdf" title="Merge PDFs" subtitle="Combine multiple" icon={<img src={mergeIcon} alt="Merge PDFs" className="w-8 h-8 md:w-12 md:h-12" />} />
+          <FeatureCard
+            to="/compress"
+            title="Compressor"
+            subtitle="Compress PDF & Images"
+            icon={<FileArchive size={34} weight="duotone" className="text-amber-300" />}
+          />
+          <FeatureCard
+            to="/merge-pdf"
+            title="Merge PDFs"
+            subtitle="Combine multiple"
+            icon={<Files size={34} weight="duotone" className="text-indigo-300" />}
+          />
           <FeatureCard
             to="/colab-to-pdf"
             title="Colab to PDF"
             subtitle="Google Colab / IPYNB → PDF"
-            icon={
-              <svg className="w-8 h-8 md:w-10 md:h-10" viewBox="0 0 32 32" fill="none">
-                <path d="M11 9C7.686 9 5 11.686 5 15s2.686 6 6 6c2.25 0 4.218-1.24 5.25-3.08A6.002 6.002 0 0 1 21 21c3.314 0 6-2.686 6-6s-2.686-6-6-6c-2.25 0-4.218 1.24-5.25 3.08A6.002 6.002 0 0 1 11 9Z" stroke="#F9AB00" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                <circle cx="11" cy="15" r="2.5" fill="#F9AB00" />
-                <circle cx="21" cy="15" r="2.5" fill="#E37400" />
-              </svg>
-            }
+            icon={<FileCode size={34} weight="duotone" className="text-orange-300" />}
           />
         </div>
 
