@@ -17,6 +17,7 @@ describe('Frontend Core Pages', () => {
       expect(screen.getByRole('heading', { level: 1, name: /scanx toolkit/i })).toBeInTheDocument();
       expect(screen.getByText(/ultimate converter/i)).toBeInTheDocument();
       expect(screen.getByText(/camscanner/i)).toBeInTheDocument();
+      expect(screen.getByText(/pdf compress/i)).toBeInTheDocument();
       expect(screen.getByText(/image compress/i)).toBeInTheDocument();
       expect(screen.getByText(/merge pdf/i)).toBeInTheDocument();
       expect(screen.getByText(/ultimate viewer/i)).toBeInTheDocument();

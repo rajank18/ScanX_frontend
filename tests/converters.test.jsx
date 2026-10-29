@@ -11,6 +11,7 @@ import JpgToPng from '../src/pages/convertor/JpgToPng';
 import PngToJpg from '../src/pages/convertor/PngToJpg';
 import ExcelToPdf from '../src/pages/convertor/ExcelToPdf';
 import PdfToExcel from '../src/pages/convertor/PdfToExcel';
+import ColabToPdf from '../src/pages/convertor/ColabToPdf';
 
 describe('All Converter Tools Pages', () => {
   it('ImageToPdf renders and handles image selection', () => {
@@ -65,5 +66,12 @@ describe('All Converter Tools Pages', () => {
     renderWithProviders(<PdfToExcel />);
     expect(screen.getByRole('heading', { name: /^pdf to excel$/i })).toBeInTheDocument();
     expect(screen.getByText(/choose pdf file/i)).toBeInTheDocument();
+  });
+
+  it('ColabToPdf renders link input and file upload options', () => {
+    renderWithProviders(<ColabToPdf />);
+    expect(screen.getByRole('heading', { name: /^google colab to pdf$/i })).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/colab\.research\.google\.com/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /convert to pdf/i })).toBeInTheDocument();
   });
 });

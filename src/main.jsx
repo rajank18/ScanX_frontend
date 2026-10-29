@@ -20,6 +20,7 @@ import JpgToPng from './pages/convertor/JpgToPng.jsx'
 import PngToJpg from './pages/convertor/PngToJpg.jsx'
 import ExcelToPdf from './pages/convertor/ExcelToPdf.jsx'
 import PdfToExcel from './pages/convertor/PdfToExcel.jsx'
+import ColabToPdf from './pages/convertor/ColabToPdf.jsx'
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,7 @@ const router = createBrowserRouter([
       { path: 'convertor/png-to-jpg', element: <PngToJpg /> },
       { path: 'convertor/excel-to-pdf', element: <ExcelToPdf /> },
       { path: 'convertor/pdf-to-excel', element: <PdfToExcel /> },
+      { path: 'convertor/colab-to-pdf', element: <ColabToPdf /> },
     ],
   },
 ])
