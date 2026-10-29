@@ -90,7 +90,7 @@ export default function Home() {
           <FeatureCard
             to="/convertor"
             title="Ultimate Converter"
-            subtitle="All file conversions in one place"
+            subtitle="All file conversions"
             icon={<ArrowsLeftRight size={32} weight="duotone" className="text-white" />}
           />
           <FeatureCard
@@ -115,7 +115,7 @@ export default function Home() {
           <FeatureCard
             to="/merge-pdf"
             title="Merge PDFs"
-            subtitle="Combine multiple"
+            subtitle="Combine multiple PDFs"
             icon={<Files size={32} weight="duotone" className="text-white" />}
           />
           <FeatureCard

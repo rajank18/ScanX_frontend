@@ -18,7 +18,7 @@ function App() {
             <div>
               <img src={logo} className="inline w-max h-8 mr-2 mb-1" alt="ScanX Logo" />
             </div>
-            <h1 className="sm:mt-1 md:mt-0">ScanX</h1>
+            <h1 className="sm:mt-2 md:mt-0">ScanX</h1>
           </Link>
 
           {/* Mobile menu button */}
