@@ -15,7 +15,7 @@ describe('Frontend Core Pages', () => {
       renderWithProviders(<Home />);
       expect(screen.getByRole('heading', { level: 1, name: /scanx toolkit/i })).toBeInTheDocument();
       expect(screen.getByText(/ultimate converter/i)).toBeInTheDocument();
-      expect(screen.getByText(/camscanner/i)).toBeInTheDocument();
+      expect(screen.getByText(/doc enhancer/i)).toBeInTheDocument();
       expect(screen.getByRole('link', { name: /^compressor/i })).toBeInTheDocument();
       expect(screen.getByText(/merge pdf/i)).toBeInTheDocument();
       expect(screen.getByText(/colab to pdf/i)).toBeInTheDocument();
@@ -23,10 +23,10 @@ describe('Frontend Core Pages', () => {
     });
   });
 
-  describe('Scan (CamScanner) Page', () => {
+  describe('Doc Enhancer Page', () => {
     it('renders title and upload field initially', () => {
       renderWithProviders(<Scan />);
-      expect(screen.getByRole('heading', { name: /^simple camscanner$/i })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /^doc enhancer$/i })).toBeInTheDocument();
       expect(screen.getByText(/choose image or take photo/i)).toBeInTheDocument();
     });
 
@@ -42,9 +42,9 @@ describe('Frontend Core Pages', () => {
       fireEvent.change(select, { target: { value: 'pdf' } });
       expect(select.value).toBe('pdf');
 
-      // Scan Document button becomes active and visible
-      const scanButton = screen.getByRole('button', { name: /scan document/i });
-      expect(scanButton).toBeInTheDocument();
+      // Enhance Document button becomes active and visible
+      const enhanceButton = screen.getByRole('button', { name: /enhance document/i });
+      expect(enhanceButton).toBeInTheDocument();
     });
   });
 

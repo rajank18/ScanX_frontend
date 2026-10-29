@@ -59,7 +59,7 @@ export default function Home() {
             subtitle="All file conversions in one place"
             icon={<img src={mergeIcon} alt="Ultimate Converter" className="w-8 h-8 md:w-12 md:h-12" />}
           />
-          <FeatureCard to="/scan" title="CamScanner" subtitle="Image → PDF/PNG" icon={<img src={scanIcon} alt="OCR Scan" className="w-8 h-8 md:w-12 md:h-12" />} />
+          <FeatureCard to="/scan" title="Doc Enhancer" subtitle="Photo → Clean PDF/PNG" icon={<img src={scanIcon} alt="Doc Enhancer" className="w-8 h-8 md:w-12 md:h-12" />} />
           <FeatureCard to="/viewer" title="Ultimate Viewer" subtitle="View PDF/DOCX/Excel" icon={<img src={viewer} alt="Ultimate Viewer" className="w-8 h-8 md:w-12 md:h-12" />} />
 
           <FeatureCard to="/compress" title="Compressor" subtitle="Compress PDF & Images" icon={<img src={pdfCompressIcon} alt="Compressor" className="w-8 h-8 md:w-12 md:h-12" />} />

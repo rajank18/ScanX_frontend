@@ -74,18 +74,18 @@ export default function SimpleCamScanner() {
   return (
     <>
       <SEO
-        title="Simple CamScanner - Convert Images to Clean Documents"
-        description="Free online document scanner tool. Upload photos of notes or receipts and clean them up into PNG or PDF format."
-        keywords="camscanner, document scanner, scan image to pdf, image to png scanner, simple camscanner"
+        title="Doc Enhancer - Turn Photos into Clean Documents Online"
+        description="Free online document enhancer. Upload photos of paper, receipts, or whiteboard notes and clean them up into high-contrast PNG or PDF files."
+        keywords="doc enhancer, document enhancer, photo to document, clean document photo, enhance scanned pdf, camscanner filter"
         canonical="/scan"
       />
 
       <div className="w-full max-w-3xl mx-auto text-gray-100 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center">
         <h2 className="text-2xl md:text-3xl font-semibold mb-2">
-          Simple CamScanner
+          Doc Enhancer
         </h2>
         <p className="text-white/70 mb-6 text-sm">
-          Enhance and clean up document photos into clear PNG or PDF files.
+          Enhance and clean up document photos into clear, high-contrast PNG or PDF files.
         </p>
 
         {/* File Upload Zone */}
@@ -136,7 +136,7 @@ export default function SimpleCamScanner() {
               disabled={isLoading}
               className="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-60 font-semibold transition"
             >
-              {isLoading ? "Scanning..." : "Scan Document"}
+              {isLoading ? "Enhancing..." : "Enhance Document"}
             </button>
           </div>
         )}
@@ -160,31 +160,31 @@ export default function SimpleCamScanner() {
 
         {!image && (
           <p className="mt-4 text-white/70">
-            Upload an image to start scanning.
+            Upload a photo of paper, notes, or receipts to enhance.
           </p>
         )}
       </div>
 
       <PageInfoSection
-        aboutTitle="About Simple CamScanner"
-        aboutText="Simple CamScanner converts photos of paper documents, receipts, whiteboard notes, and forms into clear, high-contrast images or PDFs."
+        aboutTitle="About Doc Enhancer"
+        aboutText="Doc Enhancer processes photos of physical documents, notes, receipts, and forms to eliminate shadows, whiten background paper, and sharpen text for maximum readability."
         howItWorks={[
-          "Upload or capture an image from your device.",
+          "Upload or capture a photo of a document from your device.",
           "Select your preferred output format (PNG or PDF).",
-          "Click Scan Document to sharpen contrast and download your clean file.",
+          "Click Enhance Document to automatically whiten paper, boost contrast, and download.",
         ]}
         faqs={[
           {
-            question: "What images work best?",
-            answer: "Flat photos taken under good lighting with minimal glare yield the clearest document scans.",
+            question: "What does Doc Enhancer do?",
+            answer: "It normalizes lighting, removes yellow tints and gray shadows, and sharpens ink lines so smartphone photos read like clear scanned documents.",
           },
           {
-            question: "Can I scan photos on mobile?",
-            answer: "Yes, you can upload directly from your mobile camera or photo gallery.",
+            question: "Does it work on receipts and handwritten notes?",
+            answer: "Yes, high-contrast modulation brings out faint pen strokes and printed receipt text clearly.",
           },
           {
             question: "Can I output as PDF?",
-            answer: "Yes, choose PDF in the output dropdown before scanning.",
+            answer: "Yes, choose PDF in the output dropdown before enhancing.",
           },
         ]}
       />

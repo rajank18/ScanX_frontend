@@ -29,6 +29,7 @@ function renderFullApp(initialRoute = '/') {
       children: [
         { index: true, element: <Home /> },
         { path: 'scan', element: <Scan /> },
+        { path: 'doc-enhancer', element: <Scan /> },
         { path: 'compress', element: <Compressor /> },
         { path: 'pdf-compress', element: <Compressor /> },
         { path: 'image-compress', element: <Compressor /> },
@@ -65,13 +66,13 @@ describe('End-to-End Navigation & Routing', () => {
     expect(screen.getByText(/fast, private, mobile-first utilities/i)).toBeInTheDocument();
   });
 
-  it('navigates seamlessly from Home to Scanner', async () => {
+  it('navigates seamlessly from Home to Doc Enhancer', async () => {
     renderFullApp('/');
-    const scannerLinks = screen.getAllByRole('link', { name: /scanner/i });
-    fireEvent.click(scannerLinks[0]);
+    const enhancerLinks = screen.getAllByRole('link', { name: /doc enhancer/i });
+    fireEvent.click(enhancerLinks[0]);
 
     await waitFor(() => {
-      expect(screen.getByRole('heading', { level: 2, name: /^simple camscanner$/i })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { level: 2, name: /^doc enhancer$/i })).toBeInTheDocument();
     });
   });
 

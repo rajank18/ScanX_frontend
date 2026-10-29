@@ -28,6 +28,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: 'scan', element: <Scan /> },
+      { path: 'doc-enhancer', element: <Scan /> },
       { path: 'compress', element: <Compressor /> },
       { path: 'pdf-compress', element: <Compressor /> },
       { path: 'image-compress', element: <Compressor /> },
