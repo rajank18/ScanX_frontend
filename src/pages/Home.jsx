@@ -16,7 +16,7 @@ function FeatureCard({ to, title, subtitle, icon }) {
   return (
     <Link
       to={to}
-      className="no-slat-effect group relative w-full aspect-square max-w-[170px] sm:max-w-[210px] md:max-w-[230px] rounded-2xl p-3 sm:p-4 md:p-5 flex flex-col items-center justify-center border border-white/15 shadow-2xl transition-all duration-300 hover:-translate-y-1.5 hover:border-emerald-500/50 hover:shadow-emerald-500/20 bg-black cursor-pointer select-none"
+      className="no-slat-effect group relative w-full aspect-square max-w-[170px] sm:max-w-[170px] md:max-w-[200px] rounded-2xl p-3 sm:p-4 md:p-5 flex flex-col items-center justify-center border border-white/15 shadow-2xl transition-all duration-300 hover:-translate-y-1.5 hover:border-emerald-500/50 hover:shadow-emerald-500/20 bg-black cursor-pointer select-none"
       style={{ backgroundColor: "#000000" }}
       aria-label={title}
     >
