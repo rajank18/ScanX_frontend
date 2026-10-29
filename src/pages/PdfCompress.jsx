@@ -131,7 +131,7 @@ export default function PdfCompress() {
         <button
           onClick={handleCompress}
           disabled={!file || isCompressing}
-          className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-semibold mb-4 transition"
+          className="w-full py-2.5 px-4 bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold mb-4 transition shadow-md"
         >
           {isCompressing ? "Compressing..." : "Compress PDF"}
         </button>

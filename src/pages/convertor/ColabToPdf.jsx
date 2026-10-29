@@ -110,97 +110,76 @@ export default function ColabToPdf() {
         canonical="/colab-to-pdf"
       />
 
-      <div className="w-full max-w-3xl mx-auto text-gray-100 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center">
-        <h2 className="text-2xl md:text-3xl font-semibold mb-2">Google Colab Link to PDF</h2>
-        <p className="text-white/70 mb-6 text-sm">
-          Paste your shared Google Colab link or upload an <code className="text-blue-400">.ipynb</code> / <code className="text-blue-400">.py</code> file to generate a submission-ready PDF.
+      <div className="w-full max-w-2xl mx-auto text-gray-100 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/15 bg-black/60 text-center shadow-xl">
+        <h2 className="text-2xl md:text-3xl font-bold mb-2">Google Colab Link to PDF</h2>
+        <p className="text-white/60 mb-6 text-sm">
+          Convert Google Colab notebooks or .ipynb files into clean, styled PDFs.
         </p>
 
         {/* Tab Switcher */}
-        <div className="flex justify-center gap-2 mb-6">
+        <div className="inline-flex p-1 mb-6 rounded-xl bg-white/5 border border-white/10">
           <button
             type="button"
             onClick={() => { setActiveTab("link"); setErrorMessage(""); }}
-            className={`px-4 py-1.5 rounded-lg text-sm font-medium transition ${
+            className={`px-5 py-2 rounded-lg text-sm font-medium transition-all ${
               activeTab === "link"
-                ? "bg-blue-600 text-white"
-                : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white"
+                ? "bg-emerald-600 text-white shadow-md"
+                : "text-white/70 hover:text-white hover:bg-white/5"
             }`}
           >
-            Paste Colab / GitHub Link
+            Paste Link
           </button>
           <button
             type="button"
             onClick={() => { setActiveTab("upload"); setErrorMessage(""); }}
-            className={`px-4 py-1.5 rounded-lg text-sm font-medium transition ${
+            className={`px-5 py-2 rounded-lg text-sm font-medium transition-all ${
               activeTab === "upload"
-                ? "bg-blue-600 text-white"
-                : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white"
+                ? "bg-emerald-600 text-white shadow-md"
+                : "text-white/70 hover:text-white hover:bg-white/5"
             }`}
           >
-            Upload .ipynb / .py File
+            Upload File
           </button>
         </div>
 
         {/* Link Input Mode */}
         {activeTab === "link" && (
-          <form onSubmit={handleConvert} className="mb-4 text-left">
-            <label htmlFor="colab-url" className="block text-xs font-medium text-white/70 mb-2">
-              Google Colab / Drive / GitHub Notebook Link
-            </label>
-            <div className="flex flex-col sm:flex-row gap-2">
-              <input
-                id="colab-url"
-                type="url"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                placeholder="https://colab.research.google.com/drive/... or GitHub URL"
-                className="flex-1 px-4 py-2.5 rounded-lg bg-black/40 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:border-blue-500 text-sm"
-              />
-              {url && (
-                <button
-                  type="button"
-                  onClick={() => setUrl("")}
-                  className="px-3 py-2 text-xs text-white/60 hover:text-white border border-white/10 rounded-lg hover:bg-white/5"
-                >
-                  Clear
-                </button>
-              )}
-            </div>
-
-            <div className="flex flex-wrap gap-2 mt-3 text-[11px] text-white/50">
-              <span className="bg-white/5 px-2 py-0.5 rounded border border-white/10">Colab Drive Link</span>
-              <span className="bg-white/5 px-2 py-0.5 rounded border border-white/10">Google Drive Share Link</span>
-              <span className="bg-white/5 px-2 py-0.5 rounded border border-white/10">GitHub Colab Link</span>
-              <span className="bg-white/5 px-2 py-0.5 rounded border border-white/10">Raw .ipynb / .py</span>
-            </div>
+          <form onSubmit={handleConvert} className="mb-6">
+            <input
+              id="colab-url"
+              type="url"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              placeholder="https://colab.research.google.com/drive/... or GitHub URL"
+              className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-sm transition"
+            />
           </form>
         )}
 
         {/* Upload File Mode */}
         {activeTab === "upload" && (
-          <div className="mb-4">
-            <label className="block w-full p-6 border border-dashed border-white/30 rounded-lg text-center cursor-pointer hover:bg-white/10 transition">
-              <span className="text-white/80 font-medium">Choose .ipynb or .py File</span>
-              <p className="text-xs text-white/50 mt-1">Select a downloaded Jupyter Notebook or Python script</p>
+          <div className="mb-6">
+            <label className="block w-full p-6 border border-dashed border-white/25 hover:border-emerald-500/60 rounded-xl text-center cursor-pointer hover:bg-white/[0.02] transition">
+              <span className="text-white/90 font-medium block">Choose .ipynb or .py File</span>
+              <p className="text-xs text-white/50 mt-1">Select a Jupyter Notebook or Python file</p>
               <input
                 type="file"
                 accept=".ipynb,.py,application/x-ipynb+json,text/x-python"
                 onChange={handleFileSelect}
                 className="hidden"
               />
+              {file && (
+                <div className="mt-3 py-1.5 px-3 bg-emerald-500/10 border border-emerald-500/30 rounded-lg inline-block">
+                  <span className="text-xs font-semibold text-emerald-300">Selected: {file.name}</span>
+                </div>
+              )}
             </label>
-            {file && (
-              <div className="mt-3 p-3 bg-white/10 rounded-lg text-left">
-                <p className="text-sm text-white/80">Selected: <span className="font-semibold text-white">{file.name}</span></p>
-              </div>
-            )}
           </div>
         )}
 
         {/* Error Alert */}
         {errorMessage && (
-          <div className="text-red-400 mb-4 p-3 bg-red-400/10 border border-red-500/20 rounded-lg text-sm text-left">
+          <div className="text-red-400 mb-4 p-3 bg-red-400/10 border border-red-500/20 rounded-xl text-sm text-left">
             {errorMessage}
           </div>
         )}
@@ -210,16 +189,16 @@ export default function ColabToPdf() {
           type="button"
           onClick={handleConvert}
           disabled={isLoading || (activeTab === "link" ? !url.trim() : !file)}
-          className="w-full px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-semibold mb-4 transition text-sm sm:text-base"
+          className="w-full py-3 px-6 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold rounded-xl shadow-lg transition-all text-sm sm:text-base flex items-center justify-center gap-2"
         >
-          {isLoading ? "Fetching & Generating PDF..." : "Convert to PDF"}
+          {isLoading ? "Generating PDF..." : "Convert to PDF"}
         </button>
 
         {/* Result Area */}
         {pdfBlobUrl && (
           <div className="mt-6 p-4 bg-white/5 border border-white/10 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="text-left">
-              <p className="text-sm font-semibold text-green-400 flex items-center gap-1.5">
+              <p className="text-sm font-semibold text-emerald-400 flex items-center gap-1.5">
                 <span>✓</span> Conversion Successful
               </p>
               <p className="text-xs text-white/60 mt-0.5">{pdfFilename}</p>
@@ -236,7 +215,7 @@ export default function ColabToPdf() {
               <a
                 href={pdfBlobUrl}
                 download={pdfFilename}
-                className="flex-1 sm:flex-none px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-xs font-semibold text-center"
+                className="flex-1 sm:flex-none px-5 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-500 transition text-xs font-semibold text-center"
               >
                 Download PDF
               </a>

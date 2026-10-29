@@ -93,7 +93,7 @@ export default function PdfMerge() {
           <button
             type="button"
             onClick={() => handlePreviewFile(file)}
-            className="text-blue-400 hover:text-blue-300 p-1 text-xs flex items-center justify-center cursor-pointer"
+            className="text-emerald-400 hover:text-emerald-300 p-1 text-xs flex items-center justify-center cursor-pointer"
             title="Preview PDF"
             style={{background: 'none', border: 'none'}}
           >👁</button>
@@ -165,53 +165,59 @@ export default function PdfMerge() {
         keywords="merge pdf, combine pdf, pdf merger, join pdf, merge pdf files, combine pdf files, pdf combiner, scanx merge"
         canonical="/merge-pdf"
       />
-      <div className="w-full max-w-3xl mx-auto text-gray-100 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center">
-        <h2 className="text-2xl md:text-3xl font-semibold mb-4">Merge PDFs</h2>
-      <input
-        type="file"
-        accept="application/pdf"
-        multiple
-        onChange={handleFileChange}
-        className="mb-4 block mx-auto"
-      />
-      {pdfFiles.length > 0 && (
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-        >
-          <SortableContext
-            items={pdfFiles.map(f => f.name + f.lastModified)}
-            strategy={horizontalListSortingStrategy}
+      <div className="w-full max-w-2xl mx-auto text-gray-100 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/15 bg-black/60 text-center shadow-xl">
+        <h2 className="text-2xl md:text-3xl font-bold mb-2">Merge PDFs</h2>
+        <p className="text-white/60 mb-6 text-sm">Select multiple PDF files, reorder them, and merge into one.</p>
+
+        <label className="block w-full mb-6 p-6 border border-dashed border-white/25 hover:border-emerald-500/60 rounded-xl text-center cursor-pointer hover:bg-white/[0.02] transition">
+          <span className="text-white/90 font-medium block">Choose PDF Files</span>
+          <p className="text-xs text-white/50 mt-1">Select two or more PDFs to combine</p>
+          <input
+            type="file"
+            accept="application/pdf"
+            multiple
+            onChange={handleFileChange}
+            className="hidden"
+          />
+        </label>
+
+        {pdfFiles.length > 0 && (
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
           >
-            <ul className="mb-4 flex flex-row gap-3 items-center overflow-x-auto" style={{paddingBottom: '8px'}}>
-              {pdfFiles.map((file, idx) => (
-                <SortablePdfCard key={file.name + file.lastModified} file={file} idx={idx} onRemove={handleRemove} />
-              ))}
-            </ul>
-          </SortableContext>
-        </DndContext>
-      )}
-      {pdfFiles.length > 0 && (
-        <button
-          onClick={handleMerge}
-          disabled={isMerging || pdfFiles.length < 2}
-          className="w-full px-4 py-2 bg-blue-700 text-white rounded-md hover:bg-blue-800 disabled:opacity-60 mb-2"
-        >
-          {isMerging ? "Merging..." : "Merge PDFs"}
-        </button>
-      )}
-      {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
-      {mergedPdfUrl && (
-        <a
-          href={mergedPdfUrl}
-          download="merged.pdf"
-          className="px-4 py-2 bg-black text-gray-100 rounded-md mt-4 inline-block"
-        >
-          Download Merged PDF
-        </a>
-      )}
-      <p className="mt-2 text-white/70">Select multiple PDF files, reorder them, and merge into one.</p>
+            <SortableContext
+              items={pdfFiles.map(f => f.name + f.lastModified)}
+              strategy={horizontalListSortingStrategy}
+            >
+              <ul className="mb-4 flex flex-row gap-3 items-center overflow-x-auto" style={{paddingBottom: '8px'}}>
+                {pdfFiles.map((file, idx) => (
+                  <SortablePdfCard key={file.name + file.lastModified} file={file} idx={idx} onRemove={handleRemove} />
+                ))}
+              </ul>
+            </SortableContext>
+          </DndContext>
+        )}
+        {pdfFiles.length > 0 && (
+          <button
+            onClick={handleMerge}
+            disabled={isMerging || pdfFiles.length < 2}
+            className="w-full py-3 px-6 bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 disabled:opacity-40 font-semibold mb-2 shadow-lg transition"
+          >
+            {isMerging ? "Merging..." : "Merge PDFs"}
+          </button>
+        )}
+        {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
+        {mergedPdfUrl && (
+          <a
+            href={mergedPdfUrl}
+            download="merged.pdf"
+            className="px-6 py-2.5 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-500 mt-4 inline-block shadow-md transition"
+          >
+            Download Merged PDF
+          </a>
+        )}
       </div>
       <PageInfoSection
         aboutTitle="About PDF Merger"

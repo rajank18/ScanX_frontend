@@ -233,7 +233,7 @@ export default function Compressor() {
       <div className="w-full max-w-4xl mx-auto text-gray-100 backdrop-blur-md p-6 md:p-8 rounded-2xl border border-white/20 text-center">
         {/* Header */}
         <div className="mb-6">
-          <span className="inline-block px-3 py-1 mb-2 text-xs font-semibold tracking-wider uppercase bg-blue-500/20 text-blue-300 rounded-full border border-blue-400/30">
+          <span className="inline-block px-3 py-1 mb-2 text-xs font-semibold tracking-wider uppercase bg-emerald-500/20 text-emerald-300 rounded-full border border-emerald-400/30">
             All-in-One Optimization
           </span>
           <h1 className="text-3xl md:text-4xl font-bold mb-2">Universal Compressor</h1>
@@ -251,8 +251,8 @@ export default function Compressor() {
             onClick={() => fileInputRef.current?.click()}
             className={`border-2 border-dashed rounded-2xl p-8 md:p-12 text-center cursor-pointer transition-all duration-200 ${
               isDragOver
-                ? "border-blue-400 bg-blue-500/10 scale-[1.01]"
-                : "border-white/30 hover:border-white/60 hover:bg-white/5"
+                ? "border-emerald-400 bg-emerald-500/10 scale-[1.01]"
+                : "border-white/30 hover:border-emerald-500/50 hover:bg-white/5"
             }`}
           >
             <input
@@ -324,7 +324,7 @@ export default function Compressor() {
             <div className="p-5 rounded-xl bg-white/5 border border-white/10 text-left space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <label htmlFor="quality-slider" className="text-sm font-semibold text-white/90">
-                  Compression Level / Quality: <span className="text-blue-400 font-bold">{quality}%</span>
+                  Compression Level / Quality: <span className="text-emerald-400 font-bold">{quality}%</span>
                 </label>
                 <span className="text-xs text-white/60">
                   {quality >= 80 ? "High Quality (Mild compression)" : quality >= 60 ? "Balanced (Recommended)" : "Maximum Compression"}
@@ -363,7 +363,7 @@ export default function Compressor() {
                     }}
                     className={`text-xs px-3 py-1 rounded-full transition border ${
                       quality === preset.val
-                        ? "bg-blue-600 text-white border-blue-500"
+                        ? "bg-emerald-600 text-white border-emerald-500"
                         : "bg-white/5 text-white/70 border-white/10 hover:bg-white/10"
                     }`}
                   >
@@ -386,7 +386,7 @@ export default function Compressor() {
                 type="button"
                 onClick={handleCompress}
                 disabled={isCompressing}
-                className="w-full py-3.5 px-6 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:opacity-60 disabled:cursor-not-allowed shadow-lg transition-all text-base flex items-center justify-center gap-2"
+                className="w-full py-3.5 px-6 rounded-xl font-semibold text-white bg-emerald-600 hover:bg-emerald-500 disabled:opacity-60 disabled:cursor-not-allowed shadow-lg transition-all text-base flex items-center justify-center gap-2"
               >
                 {isCompressing ? (
                   <>

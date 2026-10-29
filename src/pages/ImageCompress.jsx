@@ -103,7 +103,7 @@ export default function ImageCompress() {
           <button
             onClick={handleCompress}
             disabled={isCompressing}
-            className="w-full px-4 py-2 bg-blue-700 text-white rounded-md hover:bg-blue-800 disabled:opacity-60"
+            className="w-full py-2.5 px-4 bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 disabled:opacity-60 font-semibold shadow-md transition"
           >
             {isCompressing ? "Compressing..." : "Compress Image"}
           </button>
