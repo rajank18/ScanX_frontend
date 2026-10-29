@@ -4,8 +4,7 @@ import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { renderWithProviders } from './test-utils';
 import Home from '../src/pages/Home';
 import Scan from '../src/pages/Scan';
-import ImageCompress from '../src/pages/ImageCompress';
-import PdfCompress from '../src/pages/PdfCompress';
+import Compressor from '../src/pages/Compressor';
 import PdfMerge from '../src/pages/PdfMerge';
 import Convertor from '../src/pages/Convertor';
 import UltimateViewer from '../src/pages/UltimateViewer';
@@ -17,8 +16,7 @@ describe('Frontend Core Pages', () => {
       expect(screen.getByRole('heading', { level: 1, name: /scanx toolkit/i })).toBeInTheDocument();
       expect(screen.getByText(/ultimate converter/i)).toBeInTheDocument();
       expect(screen.getByText(/camscanner/i)).toBeInTheDocument();
-      expect(screen.getByText(/pdf compress/i)).toBeInTheDocument();
-      expect(screen.getByText(/image compress/i)).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /^compressor/i })).toBeInTheDocument();
       expect(screen.getByText(/merge pdf/i)).toBeInTheDocument();
       expect(screen.getByText(/ultimate viewer/i)).toBeInTheDocument();
     });
@@ -49,29 +47,32 @@ describe('Frontend Core Pages', () => {
     });
   });
 
-  describe('ImageCompress Page', () => {
-    it('renders heading and image upload prompt initially', () => {
-      renderWithProviders(<ImageCompress />);
-      expect(screen.getByRole('heading', { name: /^image compression$/i })).toBeInTheDocument();
-      expect(screen.getByText(/choose image or take photo/i)).toBeInTheDocument();
+  describe('Compressor Page', () => {
+    it('renders heading and file upload prompt initially', () => {
+      renderWithProviders(<Compressor />);
+      expect(screen.getByRole('heading', { name: /^universal compressor$/i })).toBeInTheDocument();
+      expect(screen.getByText(/choose pdf or image file/i)).toBeInTheDocument();
     });
 
-    it('displays quality slider and compress button after selecting an image', () => {
-      renderWithProviders(<ImageCompress />);
-      const fileInput = screen.getByLabelText(/choose image or take photo/i);
-      const testFile = new File(['mock content'], 'test.png', { type: 'image/png' });
-      fireEvent.change(fileInput, { target: { files: [testFile] } });
+    it('displays quality slider and compress image button when an image is selected', () => {
+      renderWithProviders(<Compressor />);
+      const fileInput = document.getElementById('universal-file-input');
+      const testImage = new File(['mock content'], 'test.png', { type: 'image/png' });
+      fireEvent.change(fileInput, { target: { files: [testImage] } });
 
-      expect(screen.getByText(/quality:/i)).toBeInTheDocument();
+      expect(screen.getByText(/compression level \/ quality:/i)).toBeInTheDocument();
+      expect(screen.getByText('IMAGE')).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /compress image/i })).toBeInTheDocument();
     });
-  });
 
-  describe('PdfCompress Page', () => {
-    it('renders PDF compression controls and upload prompt', () => {
-      renderWithProviders(<PdfCompress />);
-      expect(screen.getByRole('heading', { name: /^pdf compression$/i })).toBeInTheDocument();
-      expect(screen.getByText(/choose pdf file/i)).toBeInTheDocument();
+    it('displays quality controls and compress PDF button when a PDF is selected', () => {
+      renderWithProviders(<Compressor />);
+      const fileInput = document.getElementById('universal-file-input');
+      const testPdf = new File(['%PDF-1.4 mock content'], 'sample.pdf', { type: 'application/pdf' });
+      fireEvent.change(fileInput, { target: { files: [testPdf] } });
+
+      expect(screen.getByText('PDF')).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /compress pdf/i })).toBeInTheDocument();
     });
   });
 

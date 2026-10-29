@@ -62,9 +62,9 @@ export default function Home() {
           <FeatureCard to="/scan" title="CamScanner" subtitle="Image → PDF/PNG" icon={<img src={scanIcon} alt="OCR Scan" className="w-8 h-8 md:w-12 md:h-12" />} />
           <FeatureCard to="/viewer" title="Ultimate Viewer" subtitle="View PDF/DOCX/Excel" icon={<img src={viewer} alt="Ultimate Viewer" className="w-8 h-8 md:w-12 md:h-12" />} />
 
-          <FeatureCard to="/pdf-compress" title="PDF Compress" subtitle="Reduce PDF size" icon={<img src={pdfCompressIcon} alt="PDF Compress" className="w-8 h-8 md:w-12 md:h-12" />} />
-          <FeatureCard to="/image-compress" title="Image Compress" subtitle="Optimize PNG/JPG" icon={<img src={imgCompressIcon} alt="Image Compress" className="w-8 h-8 md:w-12 md:h-12" />} />
+          <FeatureCard to="/compress" title="Compressor" subtitle="Compress PDF & Images" icon={<img src={pdfCompressIcon} alt="Compressor" className="w-8 h-8 md:w-12 md:h-12" />} />
           <FeatureCard to="/merge-pdf" title="Merge PDFs" subtitle="Combine multiple" icon={<img src={mergeIcon} alt="Merge PDFs" className="w-8 h-8 md:w-12 md:h-12" />} />
+          <FeatureCard to="/convertor/colab-to-pdf" title="Colab to PDF" subtitle="Convert Notebook to PDF" icon={<span className="text-2xl md:text-3xl">📓</span>} />
         </div>
 
         <PageInfoSection

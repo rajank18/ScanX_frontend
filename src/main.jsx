@@ -6,8 +6,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import Home from './pages/Home.jsx'
 import Scan from './pages/Scan.jsx'
-import PdfCompress from './pages/PdfCompress.jsx'
-import ImageCompress from './pages/ImageCompress.jsx'
+import Compressor from './pages/Compressor.jsx'
 import PdfMerge from './pages/PdfMerge.jsx'
 import Convertor from './pages/Convertor.jsx'
 import UltimateViewer from './pages/UltimateViewer.jsx'
@@ -29,8 +28,9 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: 'scan', element: <Scan /> },
-      { path: 'pdf-compress', element: <PdfCompress /> },
-      { path: 'image-compress', element: <ImageCompress /> },
+      { path: 'compress', element: <Compressor /> },
+      { path: 'pdf-compress', element: <Compressor /> },
+      { path: 'image-compress', element: <Compressor /> },
       { path: 'merge-pdf', element: <PdfMerge /> },
       { path: 'convertor', element: <Convertor /> },
       { path: 'viewer', element: <UltimateViewer /> },

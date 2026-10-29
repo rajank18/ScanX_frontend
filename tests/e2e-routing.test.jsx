@@ -6,6 +6,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import App from '../src/App';
 import Home from '../src/pages/Home';
 import Scan from '../src/pages/Scan';
+import Compressor from '../src/pages/Compressor';
 import PdfCompress from '../src/pages/PdfCompress';
 import ImageCompress from '../src/pages/ImageCompress';
 import PdfMerge from '../src/pages/PdfMerge';
@@ -27,8 +28,9 @@ function renderFullApp(initialRoute = '/') {
       children: [
         { index: true, element: <Home /> },
         { path: 'scan', element: <Scan /> },
-        { path: 'pdf-compress', element: <PdfCompress /> },
-        { path: 'image-compress', element: <ImageCompress /> },
+        { path: 'compress', element: <Compressor /> },
+        { path: 'pdf-compress', element: <Compressor /> },
+        { path: 'image-compress', element: <Compressor /> },
         { path: 'merge-pdf', element: <PdfMerge /> },
         { path: 'convertor', element: <Convertor /> },
         { path: 'viewer', element: <UltimateViewer /> },
@@ -70,13 +72,13 @@ describe('End-to-End Navigation & Routing', () => {
     });
   });
 
-  it('navigates from Home to Image Compress', async () => {
+  it('navigates from Home to Compressor', async () => {
     renderFullApp('/');
-    const compressLinks = screen.getAllByRole('link', { name: /image compress/i });
+    const compressLinks = screen.getAllByRole('link', { name: /compressor/i });
     fireEvent.click(compressLinks[0]);
 
     await waitFor(() => {
-      expect(screen.getByRole('heading', { level: 2, name: /^image compression$/i })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { level: 1, name: /^universal compressor$/i })).toBeInTheDocument();
     });
   });
 
