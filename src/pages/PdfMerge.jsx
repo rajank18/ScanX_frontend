@@ -1,4 +1,5 @@
 import { useState } from "react";
+import UnifiedDropzone from "@/components/ui/UnifiedDropzone";
 import {
   DndContext,
   closestCenter,
@@ -165,21 +166,19 @@ export default function PdfMerge() {
         keywords="merge pdf, combine pdf, pdf merger, join pdf, merge pdf files, combine pdf files, pdf combiner, scanx merge"
         canonical="/merge-pdf"
       />
-      <div className="w-full max-w-2xl mx-auto text-gray-100 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/15 bg-black/60 text-center shadow-xl">
+      <div className="w-full max-w-2xl mx-auto text-gray-100 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#0d1614]/90 text-center shadow-2xl">
         <h2 className="text-2xl md:text-3xl font-bold mb-2">Merge PDFs</h2>
         <p className="text-white/60 mb-6 text-sm">Select multiple PDF files, reorder them, and merge into one.</p>
 
-        <label className="block w-full mb-6 p-6 border border-dashed border-white/25 hover:border-emerald-500/60 rounded-xl text-center cursor-pointer hover:bg-white/[0.02] transition">
-          <span className="text-white/90 font-medium block">Choose PDF Files</span>
-          <p className="text-xs text-white/50 mt-1">Select two or more PDFs to combine</p>
-          <input
-            type="file"
-            accept="application/pdf"
-            multiple
-            onChange={handleFileChange}
-            className="hidden"
-          />
-        </label>
+        <UnifiedDropzone
+          onFileSelect={(files) => handleFileChange({ target: { files: Array.isArray(files) ? files : [files] } })}
+          accept="application/pdf"
+          multiple={true}
+          title="Choose PDF Files"
+          subtitle="Select two or more PDFs to combine and reorder"
+          iconType="files"
+          className="mb-6"
+        />
 
         {pdfFiles.length > 0 && (
           <DndContext

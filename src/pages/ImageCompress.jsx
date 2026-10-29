@@ -88,55 +88,56 @@ export default function ImageCompress() {
         keywords="image compressor, compress jpg, compress png, reduce image size, optimize images, image optimization, scanx compress"
         canonical="/image-compress"
       />
-      <div className="w-full max-w-3xl mx-auto text-gray-100 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center">
-        <h2 className="text-2xl md:text-3xl font-semibold mb-4">Image Compression</h2>
-      <ImageUpload onImageSelect={handleImageSelect} />
-      {errorMessage && (
-        <div className="text-red-400 mb-2">{errorMessage}</div>
-      )}
-      {image && (
-        <div className="flex flex-col gap-4 items-center mt-4">
-          <label className="w-full max-w-sm text-left">
-            Quality: <span className="font-semibold">{quality}%</span>
-            <input type="range" min={10} max={100} value={quality} onChange={e => setQuality(Number(e.target.value))} className="w-full" />
-          </label>
-          <button
-            onClick={handleCompress}
-            disabled={isCompressing}
-            className="w-full py-2.5 px-4 bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 disabled:opacity-60 font-semibold shadow-md transition"
-          >
-            {isCompressing ? "Compressing..." : "Compress Image"}
-          </button>
-          <div className="flex flex-col md:flex-row gap-6 items-center justify-center w-full">
-            <div className="flex flex-col items-center">
-              <span className="text-sm text-white/70 mb-1">Original</span>
-              <img src={originalPreviewUrl || undefined} alt="original" className="w-64 h-auto rounded-md shadow-md mb-2 max-w-full object-contain" />
+      <div className="w-full max-w-2xl mx-auto text-gray-100 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#0d1614]/90 text-center shadow-2xl">
+        <h2 className="text-2xl md:text-3xl font-bold mb-2">Image Compression</h2>
+        <p className="text-white/60 mb-6 text-sm">Reduce image file size while retaining visual quality.</p>
+        <ImageUpload onImageSelect={handleImageSelect} />
+        {errorMessage && (
+          <div className="text-red-400 mb-6 p-3 bg-red-400/10 rounded-lg text-sm border border-red-500/20">{errorMessage}</div>
+        )}
+        {image && (
+          <div className="flex flex-col gap-4 items-center mt-4">
+            <label className="w-full max-w-sm text-left text-sm font-medium">
+              Quality: <span className="font-semibold text-emerald-400">{quality}%</span>
+              <input type="range" min={10} max={100} value={quality} onChange={e => setQuality(Number(e.target.value))} className="w-full accent-emerald-500 mt-2" />
+            </label>
+            <button
+              onClick={handleCompress}
+              disabled={isCompressing}
+              className="w-full py-3 px-6 bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 disabled:opacity-50 font-semibold shadow-lg transition text-sm sm:text-base"
+            >
+              {isCompressing ? "Compressing..." : "Compress Image"}
+            </button>
+            <div className="flex flex-col md:flex-row gap-6 items-center justify-center w-full mt-4">
+              <div className="flex flex-col items-center p-3 rounded-xl bg-white/5 border border-white/10">
+                <span className="text-xs font-medium text-white/70 mb-2">Original</span>
+                <img src={originalPreviewUrl || undefined} alt="original" className="w-48 h-auto rounded-lg shadow-md mb-2 max-w-full object-contain" />
+              </div>
+              {compressedBlobUrl && (
+                <div className="flex flex-col items-center p-3 rounded-xl bg-white/5 border border-white/10">
+                  <span className="text-xs font-medium text-white/70 mb-2">Compressed</span>
+                  <img src={compressedBlobUrl} alt="compressed" className="w-48 h-auto rounded-lg shadow-md mb-2 max-w-full object-contain" />
+                </div>
+              )}
             </div>
-            {compressedBlobUrl && (
-              <div className="flex flex-col items-center">
-                <span className="text-sm text-white/70 mb-1">Compressed</span>
-                <img src={compressedBlobUrl} alt="compressed" className="w-64 h-auto rounded-md shadow-md mb-2 max-w-full object-contain" />
+            {originalSize && compressedSize && reductionPercent && (
+              <div className="w-full p-4 bg-white/5 border border-white/10 rounded-xl text-left text-sm space-y-1 mt-2">
+                <p className="text-white/70">Original: <span className="font-semibold text-white">{formatSize(originalSize)}</span></p>
+                <p className="text-white/70">Compressed: <span className="font-semibold text-white">{formatSize(compressedSize)}</span></p>
+                <p className="text-emerald-400 font-semibold">Reduction: {reductionPercent}%</p>
               </div>
             )}
+            {compressedBlobUrl && (
+              <a 
+                href={compressedBlobUrl} 
+                download={`compressed-image.${image?.type === "image/png" ? "png" : "jpg"}`} 
+                className="mt-4 px-6 py-2.5 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-500 transition shadow-md inline-block text-sm sm:text-base"
+              >
+                Download Compressed Image
+              </a>
+            )}
           </div>
-          {originalSize && compressedSize && reductionPercent && (
-            <div className="text-sm text-left mt-2">
-              <p>Original: {formatSize(originalSize)}</p>
-              <p>Compressed: {formatSize(compressedSize)}</p>
-              <p>Reduction: {reductionPercent}%</p>
-            </div>
-          )}
-          {compressedBlobUrl && (
-            <a 
-              href={compressedBlobUrl} 
-              download={`compressed-image.${image?.type === "image/png" ? "png" : "jpg"}`} 
-              className="mt-4 px-4 py-2 bg-black text-gray-100 rounded-md hover:bg-gray-800"
-            >
-              Download
-            </a>
-          )}
-        </div>
-      )}
+        )}
       {isUploading && <div className="mt-2 text-green-400">Uploading...</div>}
       {!image && <p className="text-white/70">Upload a JPG/PNG image to compress.</p>}
       </div>

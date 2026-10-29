@@ -66,9 +66,9 @@ export default function Convertor() {
         keywords="file converter, pdf converter, image to pdf, word to pdf, pdf to word, excel to pdf, pdf to excel, jpg to png, png to jpg, pdf to text, online converter"
         canonical="/convertor"
       />
-      <div className="w-full max-w-3xl mx-auto text-gray-100 backdrop-blur-md pr-5 pl-6 pt-4 pb-4 rounded-2xl border border-white/20 text-center">
-        <h2 className="text-2xl md:text-3xl font-semibold mb-4">Ultimate Converter</h2>
-        <p className="text-white/70 ">Select a conversion type below:</p>
+      <div className="w-full max-w-3xl mx-auto text-gray-100 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#0d1614]/90 text-center shadow-2xl">
+        <h2 className="text-2xl md:text-3xl font-bold mb-2">Ultimate Converter</h2>
+        <p className="text-white/60 mb-2 text-sm">Select a conversion type below:</p>
         <HoverEffect items={conversionOptions} className="" />
       </div>
       <PageInfoSection

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import SEO from "@/components/SEO";
 import { apiFetch } from "@/lib/api";
 import PageInfoSection from "@/components/PageInfoSection";
+import UnifiedDropzone from "@/components/ui/UnifiedDropzone";
 
 export default function ColabToPdf() {
   const [activeTab, setActiveTab] = useState("link"); // "link" | "upload"
@@ -110,7 +111,7 @@ export default function ColabToPdf() {
         canonical="/colab-to-pdf"
       />
 
-      <div className="w-full max-w-2xl mx-auto text-gray-100 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/15 bg-black/60 text-center shadow-xl">
+      <div className="w-full max-w-2xl mx-auto text-gray-100 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#0d1614]/90 text-center shadow-2xl">
         <h2 className="text-2xl md:text-3xl font-bold mb-2">Google Colab Link to PDF</h2>
         <p className="text-white/60 mb-6 text-sm">
           Convert Google Colab notebooks or .ipynb files into clean, styled PDFs.
@@ -159,21 +160,18 @@ export default function ColabToPdf() {
         {/* Upload File Mode */}
         {activeTab === "upload" && (
           <div className="mb-6">
-            <label className="block w-full p-6 border border-dashed border-white/25 hover:border-emerald-500/60 rounded-xl text-center cursor-pointer hover:bg-white/[0.02] transition">
-              <span className="text-white/90 font-medium block">Choose .ipynb or .py File</span>
-              <p className="text-xs text-white/50 mt-1">Select a Jupyter Notebook or Python file</p>
-              <input
-                type="file"
-                accept=".ipynb,.py,application/x-ipynb+json,text/x-python"
-                onChange={handleFileSelect}
-                className="hidden"
-              />
-              {file && (
-                <div className="mt-3 py-1.5 px-3 bg-emerald-500/10 border border-emerald-500/30 rounded-lg inline-block">
-                  <span className="text-xs font-semibold text-emerald-300">Selected: {file.name}</span>
-                </div>
-              )}
-            </label>
+            <UnifiedDropzone
+              onFileSelect={handleFileSelect}
+              accept=".ipynb,.py,application/x-ipynb+json,text/x-python"
+              title="Choose .ipynb or .py File"
+              subtitle="Select a Jupyter Notebook or Python file to convert"
+              iconType="file"
+            />
+            {file && (
+              <div className="mt-3 py-1.5 px-3 bg-emerald-500/10 border border-emerald-500/30 rounded-lg inline-block">
+                <span className="text-xs font-semibold text-emerald-300">Selected: {file.name}</span>
+              </div>
+            )}
           </div>
         )}
 

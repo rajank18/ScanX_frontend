@@ -127,7 +127,7 @@ export default function ImageToPdf() {
           alignItems: 'center',
           justifyContent: 'flex-start',
         }}
-        className={`bg-gray-800 px-2 py-2 rounded-xl shadow-md relative ${isDragging ? 'ring-2 ring-blue-500' : ''}`}
+        className={`bg-gray-800 px-2 py-2 rounded-xl shadow-md relative ${isDragging ? 'ring-2 ring-emerald-500' : ''}`}
         {...attributes}
       >
         <img src={URL.createObjectURL(img)} alt={`preview-${idx}`} className="w-24 h-32 object-contain rounded-md shadow-md mb-1" />
@@ -157,54 +157,52 @@ export default function ImageToPdf() {
         keywords="image to pdf, jpg to pdf, png to pdf, convert images to pdf, pictures to pdf, photos to pdf, online image converter"
         canonical="/convertor/image-to-pdf"
       />
-      <div className="w-full max-w-3xl mx-auto text-gray-100 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center">
-        <h2 className="text-2xl md:text-3xl font-semibold mb-4">Image to PDF</h2>
-      <p className="text-white/70 mb-6">Upload one or more images (any format) to convert them into a single PDF file. Drag to reorder.</p>
-  <ImageUpload onImageSelect={handleImageSelect} />
-      {images.length > 0 && (
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-        >
-          <SortableContext
-            items={images.map((_, i) => i.toString())}
-            strategy={horizontalListSortingStrategy}
+      <div className="w-full max-w-2xl mx-auto text-gray-100 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#0d1614]/90 text-center shadow-2xl">
+        <h2 className="text-2xl md:text-3xl font-bold mb-2">Image to PDF</h2>
+        <p className="text-white/60 mb-6 text-sm">Upload one or more images (any format) to convert them into a single PDF file. Drag to reorder.</p>
+        <ImageUpload onImageSelect={handleImageSelect} />
+        {images.length > 0 && (
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
           >
-            <ul className="mb-4 flex flex-row gap-3 items-center overflow-x-auto" style={{paddingBottom: '8px'}}>
-              {images.map((img, idx) => (
-                <SortableImageCard key={idx} img={img} idx={idx} onRemove={handleRemoveImage} />
-              ))}
-            </ul>
-          </SortableContext>
-        </DndContext>
-      )}
-      {images.length > 0 && (
-        <div className="flex flex-col gap-4 items-center mt-6">
-          <button
-            onClick={handleConvert}
-            disabled={isLoading}
-            className="w-full py-2.5 px-4 bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 disabled:opacity-60 font-semibold shadow-md transition"
-          >
-            {isLoading ? "Converting..." : "Convert to PDF"}
-          </button>
-        </div>
-      )}
-      {errorMessage && <p className="mt-2 text-sm text-red-400">{errorMessage}</p>}
-      {pdfBlobUrl && (
-        <div className="flex flex-col items-center p-4 mt-6">
-          <h2 className="text-lg font-semibold mb-2">PDF Ready</h2>
-          {/* <iframe src={pdfBlobUrl} title="PDF Preview" className="w-64 h-80 rounded-md shadow-md mb-2 bg-white" /> */}
-          <a
-            href={pdfBlobUrl}
-            download="converted.pdf"
-            className="px-4 py-2 bg-black text-gray-100 rounded-md"
-          >
-            Download PDF
-          </a>
-        </div>
-      )}
-      {!images.length && <p className="mt-2 text-white/70">Upload images to start conversion.</p>}
+            <SortableContext
+              items={images.map((_, i) => i.toString())}
+              strategy={horizontalListSortingStrategy}
+            >
+              <ul className="mb-4 flex flex-row gap-3 items-center overflow-x-auto" style={{paddingBottom: '8px'}}>
+                {images.map((img, idx) => (
+                  <SortableImageCard key={idx} img={img} idx={idx} onRemove={handleRemoveImage} />
+                ))}
+              </ul>
+            </SortableContext>
+          </DndContext>
+        )}
+        {images.length > 0 && (
+          <div className="flex flex-col gap-4 items-center mt-6">
+            <button
+              onClick={handleConvert}
+              disabled={isLoading}
+              className="w-full py-3 px-6 bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 disabled:opacity-50 font-semibold shadow-lg transition text-sm sm:text-base"
+            >
+              {isLoading ? "Converting..." : "Convert to PDF"}
+            </button>
+          </div>
+        )}
+        {errorMessage && <p className="mt-2 text-sm text-red-400">{errorMessage}</p>}
+        {pdfBlobUrl && (
+          <div className="flex flex-col items-center p-4 mt-6">
+            <h2 className="text-lg font-semibold mb-2">PDF Ready</h2>
+            <a
+              href={pdfBlobUrl}
+              download="converted.pdf"
+              className="px-6 py-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 transition font-semibold shadow-md inline-block text-sm sm:text-base"
+            >
+              Download PDF
+            </a>
+          </div>
+        )}
       </div>
     </>
   );

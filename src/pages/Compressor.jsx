@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import SEO from "@/components/SEO";
 import PageInfoSection from "@/components/PageInfoSection";
+import UnifiedDropzone from "@/components/ui/UnifiedDropzone";
 import { apiFetch } from "@/lib/api";
 import { compressAccurately } from "image-conversion";
 
@@ -230,55 +231,28 @@ export default function Compressor() {
         canonical="/compress"
       />
 
-      <div className="w-full max-w-4xl mx-auto text-gray-100 backdrop-blur-md p-6 md:p-8 rounded-2xl border border-white/20 text-center">
+      <div className="w-full max-w-2xl mx-auto text-gray-100 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#0d1614]/90 text-center shadow-2xl">
         {/* Header */}
         <div className="mb-6">
           <span className="inline-block px-3 py-1 mb-2 text-xs font-semibold tracking-wider uppercase bg-emerald-500/20 text-emerald-300 rounded-full border border-emerald-400/30">
             All-in-One Optimization
           </span>
           <h1 className="text-3xl md:text-4xl font-bold mb-2">Universal Compressor</h1>
-          <p className="text-white/70 max-w-xl mx-auto text-sm md:text-base">
+          <p className="text-white/60 max-w-xl mx-auto text-sm md:text-base">
             Compress PDF documents and images (JPG, PNG, WebP) in one place with intelligent quality retention.
           </p>
         </div>
 
         {/* Dropzone / Upload area */}
         {!file && (
-          <div
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onClick={() => fileInputRef.current?.click()}
-            className={`border-2 border-dashed rounded-2xl p-8 md:p-12 text-center cursor-pointer transition-all duration-200 ${
-              isDragOver
-                ? "border-emerald-400 bg-emerald-500/10 scale-[1.01]"
-                : "border-white/30 hover:border-emerald-500/50 hover:bg-white/5"
-            }`}
-          >
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".pdf,application/pdf,image/png,image/jpeg,image/jpg,image/webp,image/*"
-              onChange={handleFileSelect}
-              className="hidden"
-              id="universal-file-input"
-            />
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center text-3xl">
-              🗜️
-            </div>
-            <h3 className="text-lg md:text-xl font-semibold mb-1">
-              Choose PDF or Image File
-            </h3>
-            <p className="text-sm text-white/60 mb-4">
-              Drag & drop your file here, or click to browse
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-white/50">
-              <span className="px-2 py-1 rounded bg-white/10">PDF Documents</span>
-              <span className="px-2 py-1 rounded bg-white/10">JPG / JPEG</span>
-              <span className="px-2 py-1 rounded bg-white/10">PNG</span>
-              <span className="px-2 py-1 rounded bg-white/10">WebP</span>
-            </div>
-          </div>
+          <UnifiedDropzone
+            onFileSelect={handleFileProcess}
+            accept=".pdf,application/pdf,image/png,image/jpeg,image/jpg,image/webp,image/*"
+            title="Choose PDF or Image File"
+            subtitle="Drag & drop your file here, or click to browse (PDF, JPG, PNG, WebP)"
+            iconType="upload"
+            id="universal-file-input"
+          />
         )}
 
         {/* Selected File Details & Controls */}
@@ -343,7 +317,7 @@ export default function Compressor() {
                   setCompressedBlobUrl(null);
                   setCompressedSize(null);
                 }}
-                className="w-full accent-blue-500 cursor-pointer"
+                className="w-full accent-emerald-500 cursor-pointer"
               />
 
               {/* Quick Presets */}

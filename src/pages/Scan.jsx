@@ -3,6 +3,7 @@ import ScanPreview from "../components/ScanPreview";
 import SEO from "@/components/SEO";
 import PageInfoSection from "@/components/PageInfoSection";
 import { apiFetch } from "@/lib/api";
+import UnifiedDropzone from "@/components/ui/UnifiedDropzone";
 
 export default function SimpleCamScanner() {
   const [image, setImage] = useState(null);
@@ -80,26 +81,23 @@ export default function SimpleCamScanner() {
         canonical="/scan"
       />
 
-      <div className="w-full max-w-3xl mx-auto text-gray-100 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center">
-        <h2 className="text-2xl md:text-3xl font-semibold mb-2">
+      <div className="w-full max-w-2xl mx-auto text-gray-100 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#0d1614]/90 text-center shadow-2xl">
+        <h2 className="text-2xl md:text-3xl font-bold mb-2">
           Doc Enhancer
         </h2>
-        <p className="text-white/70 mb-6 text-sm">
+        <p className="text-white/60 mb-6 text-sm">
           Enhance and clean up document photos into clear, high-contrast PNG or PDF files.
         </p>
 
-        {/* File Upload Zone */}
-        <label className="block w-full mb-4 p-4 border border-dashed border-white/30 rounded-lg text-center cursor-pointer hover:bg-white/10 transition">
-          <span className="text-white/80 font-medium">
-            Choose Image or Take Photo
-          </span>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="hidden"
-          />
-        </label>
+        {/* Unified File Upload Zone */}
+        <UnifiedDropzone
+          onFileSelect={(f) => handleImageChange({ target: { files: [f] } })}
+          accept="image/*"
+          title="Choose Image or Take Photo"
+          subtitle="Upload a photo of paper, notes, or receipts to enhance"
+          iconType="image"
+          className="mb-6"
+        />
 
         {/* Upload Preview */}
         {image && previewUrl && (
@@ -122,7 +120,7 @@ export default function SimpleCamScanner() {
               </label>
               <select
                 id="format"
-                className="border rounded-lg px-3 py-2 bg-gray-100 text-black font-medium focus:outline-none w-full"
+                className="border border-white/20 rounded-xl px-4 py-2.5 bg-black/70 text-white font-medium focus:outline-none focus:border-emerald-500 w-full text-sm"
                 value={format}
                 onChange={(e) => setFormat(e.target.value)}
               >
@@ -134,7 +132,7 @@ export default function SimpleCamScanner() {
             <button
               onClick={handleScan}
               disabled={isLoading}
-              className="w-full sm:w-auto px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-500 disabled:opacity-60 font-semibold transition shadow-md"
+              className="w-full sm:w-auto px-6 py-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 disabled:opacity-50 font-semibold transition shadow-lg text-sm"
             >
               {isLoading ? "Enhancing..." : "Enhance Document"}
             </button>

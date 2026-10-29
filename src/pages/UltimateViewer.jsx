@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import SEO from "@/components/SEO";
 import WebViewer from "@pdftron/webviewer";
 import PageInfoSection from "@/components/PageInfoSection";
+import UnifiedDropzone from "@/components/ui/UnifiedDropzone";
 
 const SUPPORTED_EXTENSIONS = ["pdf", "docx", "doc", "xlsx", "xls"];
 
@@ -103,45 +104,43 @@ export default function UltimateViewer() {
         canonical="/viewer"
       />
 
-      <div className="w-full max-w-6xl mx-auto text-gray-100">
-        <div className="backdrop-blur-md p-6 rounded-2xl border border-white/20 mb-6">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-center">Ultimate Document Viewer</h2>
-          <p className="text-white/70 text-center mb-6">WebViewer powered preview for PDF, Word, and Excel files</p>
+      <div className="w-full max-w-2xl mx-auto text-gray-100 mb-6">
+        <div className="backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#0d1614]/90 text-center shadow-2xl">
+          <h2 className="text-2xl md:text-3xl font-bold mb-2">Ultimate Document Viewer</h2>
+          <p className="text-white/60 mb-6 text-sm">WebViewer powered preview for PDF, Word, and Excel files</p>
 
-          <label className="block w-full p-4 border border-dashed border-white/30 rounded-lg text-center cursor-pointer hover:bg-white/10 transition">
-            <span className="text-white/80">Choose a file (PDF, DOCX, DOC, XLSX, XLS)</span>
-            <input
-              type="file"
-              accept=".pdf,.docx,.doc,.xlsx,.xls"
-              onChange={handleFileSelect}
-              className="hidden"
-            />
-          </label>
+          <UnifiedDropzone
+            onFileSelect={(selectedFile) => handleFileSelect({ target: { files: [selectedFile] } })}
+            accept=".pdf,.docx,.doc,.xlsx,.xls"
+            title="Choose a file (PDF, DOCX, DOC, XLSX, XLS)"
+            subtitle="Drag & drop or click to preview in browser"
+            iconType="file"
+          />
 
           {file && (
-            <div className="mt-4 p-3 bg-white/10 rounded-lg">
-              <p className="text-sm text-white/70">
-                Selected: <span className="font-semibold">{file.name}</span>
+            <div className="mt-4 py-1.5 px-3 bg-emerald-500/10 border border-emerald-500/30 rounded-lg inline-block">
+              <p className="text-xs font-semibold text-emerald-300">
+                Selected: {file.name}
               </p>
             </div>
           )}
 
           {errorMessage && (
-            <div className="text-red-400 mt-4 p-3 bg-red-400/10 rounded-lg text-sm">{errorMessage}</div>
+            <div className="text-red-400 mt-4 p-3 bg-red-400/10 rounded-lg text-sm border border-red-500/20">{errorMessage}</div>
           )}
         </div>
 
         {isLoading && (
-          <div className="backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center mb-6">
-            <p className="text-green-400 font-semibold">Loading document...</p>
+          <div className="backdrop-blur-md p-6 rounded-2xl border border-white/10 bg-[#0d1614]/90 text-center my-6 shadow-2xl">
+            <p className="text-emerald-400 font-semibold animate-pulse">Loading document...</p>
           </div>
         )}
 
         {file && (
-          <div className="backdrop-blur-md p-4 rounded-2xl border border-white/20">
+          <div className="backdrop-blur-md p-4 rounded-2xl border border-white/10 bg-[#0d1614]/90 shadow-2xl mt-6">
             <div
               ref={viewerRef}
-              className="bg-black/40 rounded-lg overflow-hidden"
+              className="bg-black/60 rounded-xl overflow-hidden border border-white/10"
               style={{ height: "700px", width: "100%" }}
             />
           </div>

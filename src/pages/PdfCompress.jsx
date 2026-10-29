@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import SEO from "@/components/SEO";
 import PageInfoSection from "@/components/PageInfoSection";
+import UnifiedDropzone from "@/components/ui/UnifiedDropzone";
 import { apiFetch } from "@/lib/api";
 
 export default function PdfCompress() {
@@ -85,45 +86,44 @@ export default function PdfCompress() {
         keywords="pdf compressor, compress pdf, reduce pdf size, pdf optimization, online pdf compression, scanx compress"
         canonical="/pdf-compress"
       />
-      <div className="w-full max-w-3xl mx-auto text-gray-100 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center">
-        <h2 className="text-2xl md:text-3xl font-semibold mb-4">PDF Compression</h2>
-        <p className="text-white/70 mb-6">Upload a PDF file to compress it and reduce its file size.</p>
+      <div className="w-full max-w-2xl mx-auto text-gray-100 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#0d1614]/90 text-center shadow-2xl">
+        <h2 className="text-2xl md:text-3xl font-bold mb-2">PDF Compression</h2>
+        <p className="text-white/60 mb-6 text-sm">Upload a PDF file to compress it and reduce its file size.</p>
 
-        <label className="block w-full mb-4 p-4 border border-dashed border-white/30 rounded-lg text-center cursor-pointer hover:bg-white/10 transition">
-          <span className="text-white/80">Choose PDF File</span>
-          <input
-            type="file"
-            accept=".pdf,application/pdf"
-            onChange={handleFileSelect}
-            className="hidden"
-          />
-        </label>
+        <UnifiedDropzone
+          onFileSelect={(f) => handleFileSelect({ target: { files: [f] } })}
+          accept=".pdf,application/pdf"
+          title="Choose PDF File"
+          subtitle="Select a PDF file to compress and reduce file size"
+          iconType="file"
+          className="mb-6"
+        />
 
         {file && (
-          <div className="mb-4 p-3 bg-white/10 rounded-lg">
-            <p className="text-sm text-white/70">Selected: <span className="font-semibold">{file.name}</span></p>
-            <p className="text-xs text-white/50 mt-1">Size: {formatSize(file.size)}</p>
+          <div className="mb-6 py-1.5 px-3 bg-emerald-500/10 border border-emerald-500/30 rounded-lg inline-block">
+            <p className="text-xs font-semibold text-emerald-300">Selected: {file.name}</p>
+            <p className="text-xs text-white/50 mt-0.5">Size: {formatSize(file.size)}</p>
           </div>
         )}
 
         {file && (
-          <div className="flex flex-col gap-4 items-center mt-4 mb-4">
-            <label className="w-full max-w-sm text-left">
-              Quality: <span className="font-semibold">{quality}%</span>
+          <div className="flex flex-col gap-4 items-center mt-2 mb-6">
+            <label className="w-full max-w-sm text-left text-sm font-medium">
+              Quality: <span className="font-semibold text-emerald-400">{quality}%</span>
               <input 
                 type="range" 
                 min={10} 
                 max={100} 
                 value={quality} 
                 onChange={e => setQuality(Number(e.target.value))} 
-                className="w-full" 
+                className="w-full accent-emerald-500 mt-2" 
               />
             </label>
           </div>
         )}
 
         {errorMessage && (
-          <div className="text-red-400 mb-4 p-3 bg-red-400/10 rounded-lg text-sm">
+          <div className="text-red-400 mb-6 p-3 bg-red-400/10 rounded-lg text-sm border border-red-500/20">
             {errorMessage}
           </div>
         )}
@@ -131,28 +131,28 @@ export default function PdfCompress() {
         <button
           onClick={handleCompress}
           disabled={!file || isCompressing}
-          className="w-full py-2.5 px-4 bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold mb-4 transition shadow-md"
+          className="w-full py-3 px-6 bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold mb-4 transition shadow-lg text-sm sm:text-base"
         >
           {isCompressing ? "Compressing..." : "Compress PDF"}
         </button>
 
         {compressedBlobUrl && (
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-full p-4 bg-white/10 rounded-lg text-left">
+          <div className="flex flex-col items-center gap-3 mt-4">
+            <div className="w-full p-4 bg-white/5 border border-white/10 rounded-xl text-left">
               <p className="text-sm text-white/70">
-                Original: <span className="font-semibold">{formatSize(originalSize)}</span>
+                Original: <span className="font-semibold text-white">{formatSize(originalSize)}</span>
               </p>
               <p className="text-sm text-white/70 mt-1">
-                Compressed: <span className="font-semibold">{formatSize(compressedSize)}</span>
+                Compressed: <span className="font-semibold text-white">{formatSize(compressedSize)}</span>
               </p>
-              <p className="text-sm text-green-400 mt-1 font-semibold">
+              <p className="text-sm text-emerald-400 mt-1 font-semibold">
                 Reduction: {reductionPercent}%
               </p>
             </div>
             <a
               href={compressedBlobUrl}
               download="compressed.pdf"
-              className="px-6 py-2 bg-black text-gray-100 rounded-lg hover:bg-gray-800 transition font-semibold w-full"
+              className="px-6 py-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 transition font-semibold shadow-md inline-block w-full text-sm sm:text-base text-center"
             >
               Download Compressed PDF
             </a>

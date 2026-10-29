@@ -1,6 +1,7 @@
 import { useState } from "react";
 import SEO from "@/components/SEO";
 import { apiFetch } from "@/lib/api";
+import UnifiedDropzone from "@/components/ui/UnifiedDropzone";
 
 export default function ExcelToPdf() {
   const [file, setFile] = useState(null);
@@ -55,28 +56,27 @@ export default function ExcelToPdf() {
         keywords="excel to pdf, xls to pdf, xlsx to pdf, spreadsheet to pdf, convert excel to pdf, online converter"
         canonical="/convertor/excel-to-pdf"
       />
-      <div className="w-full max-w-3xl mx-auto text-gray-100 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center">
-        <h2 className="text-2xl md:text-3xl font-semibold mb-4">Excel to PDF</h2>
-        <p className="text-white/70 mb-6">Upload an Excel spreadsheet (.xls or .xlsx) to convert it to PDF format.</p>
+      <div className="w-full max-w-2xl mx-auto text-gray-100 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#0d1614]/90 text-center shadow-2xl">
+        <h2 className="text-2xl md:text-3xl font-bold mb-2">Excel to PDF</h2>
+        <p className="text-white/60 mb-6 text-sm">Upload an Excel spreadsheet (.xls or .xlsx) to convert it to PDF format.</p>
         
-        <label className="block w-full mb-4 p-4 border border-dashed border-white/30 rounded-lg text-center cursor-pointer hover:bg-white/10 transition">
-          <span className="text-white/80">Choose Excel File</span>
-          <input
-            type="file"
-            accept=".xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            onChange={handleFileSelect}
-            className="hidden"
-          />
-        </label>
+        <UnifiedDropzone
+          onFileSelect={(f) => handleFileSelect({ target: { files: [f] } })}
+          accept=".xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          title="Choose Excel File"
+          subtitle="Select a .xls or .xlsx spreadsheet to convert"
+          iconType="file"
+          className="mb-6"
+        />
 
         {file && (
-          <div className="mb-4 p-3 bg-white/10 rounded-lg">
-            <p className="text-sm text-white/70">Selected: <span className="font-semibold">{file.name}</span></p>
+          <div className="mb-6 py-1.5 px-3 bg-emerald-500/10 border border-emerald-500/30 rounded-lg inline-block">
+            <p className="text-xs font-semibold text-emerald-300">Selected: {file.name}</p>
           </div>
         )}
 
         {errorMessage && (
-          <div className="text-red-400 mb-4 p-3 bg-red-400/10 rounded-lg text-sm">
+          <div className="text-red-400 mb-6 p-3 bg-red-400/10 rounded-lg text-sm border border-red-500/20">
             {errorMessage}
           </div>
         )}
@@ -84,17 +84,17 @@ export default function ExcelToPdf() {
         <button
           onClick={handleConvert}
           disabled={!file || isLoading}
-          className="w-full py-2.5 px-4 bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold mb-4 transition shadow-md"
+          className="w-full py-3 px-6 bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold mb-4 transition shadow-lg text-sm sm:text-base"
         >
           {isLoading ? "Converting..." : "Convert to PDF"}
         </button>
 
         {pdfBlobUrl && (
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center mt-4">
             <a
               href={pdfBlobUrl}
               download="converted.pdf"
-              className="px-6 py-2 bg-black text-gray-100 rounded-lg hover:bg-gray-800 transition font-semibold"
+              className="px-6 py-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 transition font-semibold shadow-md inline-block text-sm sm:text-base"
             >
               Download PDF
             </a>
