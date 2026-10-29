@@ -10,7 +10,7 @@ import {
   FileCode,
 } from "@phosphor-icons/react";
 import PageInfoSection from "@/components/PageInfoSection";
-import RingField from "@/components/ui/ring-field";
+import MicroSlats from "@/components/ui/MicroSlats";
 
 function FeatureCard({ to, title, subtitle, icon }) {
   return (
@@ -49,8 +49,37 @@ export default function Home() {
         canonical="/"
       />
 
-      {/* RingField Background for Homepage only */}
-      <RingField className="fixed inset-0 w-full h-full z-0 pointer-events-none" />
+      {/* MicroSlats Background for Homepage only */}
+      <div className="fixed inset-0 w-full h-full z-0 pointer-events-none">
+        <MicroSlats
+          preset="swell"
+          color="#10b981"
+          glintColor="#ffffff"
+          backgroundColor="#071311"
+          slatWidth={10}
+          slatHeight={25}
+          gap={3}
+          roundness={0.75}
+          interactive
+          cursorStrength={1}
+          cursorSize={40}
+          swirl={0}
+          trail={1.4}
+          lean={0}
+          intro
+          scale={1.5}
+          speed={0.6}
+          direction={250}
+          chop={0.55}
+          stretch={0}
+          glint={0.7}
+          contrast={1.25}
+          perspective={0.55}
+          fog={0.55}
+          introDuration={1.5}
+          paused={false}
+        />
+      </div>
 
       <div className="w-full relative z-10">
         <div className="text-center mb-6 md:mb-12">
