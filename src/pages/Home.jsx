@@ -64,7 +64,18 @@ export default function Home() {
 
           <FeatureCard to="/compress" title="Compressor" subtitle="Compress PDF & Images" icon={<img src={pdfCompressIcon} alt="Compressor" className="w-8 h-8 md:w-12 md:h-12" />} />
           <FeatureCard to="/merge-pdf" title="Merge PDFs" subtitle="Combine multiple" icon={<img src={mergeIcon} alt="Merge PDFs" className="w-8 h-8 md:w-12 md:h-12" />} />
-          <FeatureCard to="/convertor/colab-to-pdf" title="Colab to PDF" subtitle="Convert Notebook to PDF" icon={<span className="text-2xl md:text-3xl">📓</span>} />
+          <FeatureCard
+            to="/colab-to-pdf"
+            title="Colab to PDF"
+            subtitle="Google Colab / IPYNB → PDF"
+            icon={
+              <svg className="w-8 h-8 md:w-10 md:h-10" viewBox="0 0 32 32" fill="none">
+                <path d="M11 9C7.686 9 5 11.686 5 15s2.686 6 6 6c2.25 0 4.218-1.24 5.25-3.08A6.002 6.002 0 0 1 21 21c3.314 0 6-2.686 6-6s-2.686-6-6-6c-2.25 0-4.218 1.24-5.25 3.08A6.002 6.002 0 0 1 11 9Z" stroke="#F9AB00" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                <circle cx="11" cy="15" r="2.5" fill="#F9AB00" />
+                <circle cx="21" cy="15" r="2.5" fill="#E37400" />
+              </svg>
+            }
+          />
         </div>
 
         <PageInfoSection

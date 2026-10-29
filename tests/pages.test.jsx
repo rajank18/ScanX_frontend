@@ -18,6 +18,7 @@ describe('Frontend Core Pages', () => {
       expect(screen.getByText(/camscanner/i)).toBeInTheDocument();
       expect(screen.getByRole('link', { name: /^compressor/i })).toBeInTheDocument();
       expect(screen.getByText(/merge pdf/i)).toBeInTheDocument();
+      expect(screen.getByText(/colab to pdf/i)).toBeInTheDocument();
       expect(screen.getByText(/ultimate viewer/i)).toBeInTheDocument();
     });
   });

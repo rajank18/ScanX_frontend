@@ -19,6 +19,7 @@ import JpgToPng from '../src/pages/convertor/JpgToPng';
 import PngToJpg from '../src/pages/convertor/PngToJpg';
 import ExcelToPdf from '../src/pages/convertor/ExcelToPdf';
 import PdfToExcel from '../src/pages/convertor/PdfToExcel';
+import ColabToPdf from '../src/pages/convertor/ColabToPdf';
 
 function renderFullApp(initialRoute = '/') {
   const routes = [
@@ -34,6 +35,8 @@ function renderFullApp(initialRoute = '/') {
         { path: 'merge-pdf', element: <PdfMerge /> },
         { path: 'convertor', element: <Convertor /> },
         { path: 'viewer', element: <UltimateViewer /> },
+        { path: 'colab-to-pdf', element: <ColabToPdf /> },
+        { path: 'convertor/colab-to-pdf', element: <ColabToPdf /> },
         { path: 'convertor/image-to-pdf', element: <ImageToPdf /> },
         { path: 'convertor/word-to-pdf', element: <WordToPdf /> },
         { path: 'convertor/pdf-to-text', element: <PdfToText /> },

@@ -34,6 +34,7 @@ const router = createBrowserRouter([
       { path: 'merge-pdf', element: <PdfMerge /> },
       { path: 'convertor', element: <Convertor /> },
       { path: 'viewer', element: <UltimateViewer /> },
+      { path: 'colab-to-pdf', element: <ColabToPdf /> },
       { path: 'convertor/image-to-pdf', element: <ImageToPdf /> },
       { path: 'convertor/word-to-pdf', element: <WordToPdf /> },
       { path: 'convertor/pdf-to-word', element: <PdfToWord /> },
