@@ -15,10 +15,10 @@ function App() {
       <header className="sticky top-0 z-20 border-b border-white/10 backdrop-blur supports-[backdrop-filter]:bg-black">
         <div className="container-narrow h-14 md:h-16 flex items-center justify-between">
           <Link to="/" className="text-xl md:text-2xl font-bold tracking-tight flex ">
-          <div>
-            <img src={logo} className="inline w-max h-8 mr-2 mb-1" alt="ScanX Logo" />
-          </div>
-          <h1>ScanX</h1>
+            <div>
+              <img src={logo} className="inline w-max h-8 mr-2 mb-1" alt="ScanX Logo" />
+            </div>
+            <h1 className="sm:mt-1 md:mt-0">ScanX</h1>
           </Link>
 
           {/* Mobile menu button */}
