@@ -70,7 +70,7 @@ describe('All Converter Tools Pages', () => {
 
   it('ColabToPdf renders link input and file upload options', () => {
     renderWithProviders(<ColabToPdf />);
-    expect(screen.getByRole('heading', { name: /^google colab to pdf$/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /^google colab link to pdf$/i })).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/colab\.research\.google\.com/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /convert to pdf/i })).toBeInTheDocument();
   });

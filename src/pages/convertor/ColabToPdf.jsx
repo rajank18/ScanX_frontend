@@ -104,16 +104,16 @@ export default function ColabToPdf() {
   return (
     <>
       <SEO
-        title="Google Colab to PDF - Convert Colab & Jupyter Notebooks Online Free"
-        description="Convert Google Colab links, GitHub notebooks, .ipynb, and .py files directly into clean, styled PDFs with code, markdown, and charts. Fast, free, and secure."
-        keywords="google colab to pdf, colab to pdf, convert ipynb to pdf, jupyter notebook to pdf, python to pdf, colab pdf export, scanx converter"
-        canonical="/convertor/colab-to-pdf"
+        title="Google Colab Link to PDF - Convert Colab Links & Notebooks Online"
+        description="Convert Google Colab share links and Jupyter .ipynb notebooks directly into clean, styled PDFs with syntax highlighted code and markdown. Free, instant, and mobile-friendly."
+        keywords="colab link to pdf, google colab link to pdf, convert colab link to pdf, google colab to pdf, colab to pdf, ipynb to pdf, colab pdf export, scanx converter"
+        canonical="/colab-to-pdf"
       />
 
       <div className="w-full max-w-3xl mx-auto text-gray-100 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center">
-        <h2 className="text-2xl md:text-3xl font-semibold mb-2">Google Colab to PDF</h2>
+        <h2 className="text-2xl md:text-3xl font-semibold mb-2">Google Colab Link to PDF</h2>
         <p className="text-white/70 mb-6 text-sm">
-          Convert shared Google Colab links or <code className="text-blue-400">.ipynb</code> / <code className="text-blue-400">.py</code> files into formatted, submission-ready PDFs.
+          Paste your shared Google Colab link or upload an <code className="text-blue-400">.ipynb</code> / <code className="text-blue-400">.py</code> file to generate a submission-ready PDF.
         </p>
 
         {/* Tab Switcher */}
