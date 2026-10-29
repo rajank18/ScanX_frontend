@@ -50,7 +50,7 @@ export default function Home() {
       />
 
       {/* RingField Background for Homepage only */}
-      <RingField className="fixed inset-0 w-full h-full -z-10 opacity-70" />
+      <RingField className="fixed inset-0 w-full h-full z-0 pointer-events-none" />
 
       <div className="w-full relative z-10">
         <div className="text-center mb-6 md:mb-12">

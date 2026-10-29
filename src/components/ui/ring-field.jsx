@@ -2,31 +2,28 @@ import { useEffect, useRef } from "react";
 
 /**
  * RingField Component
- * Wavy rings of fine dust drifting outward from a dark center.
- * Features ribbon twisting, wave lobes, sparkle particles, and responsive canvas sizing.
+ * Live interactive starry ring particle effect.
+ * Features:
+ * - Organic, non-circular concentric rings with natural harmonic waves/folds.
+ * - Gentle counter-clockwise rotation and slow outward radial expansion.
+ * - Stardust particles with individual scintillation/twinkle, diamond white & celestial cyan/blue tones,
+ *   and subtle chromatic cosmic specks matching Image 2.
+ * - Interactive hover explosion: mouse pushes particles away with dynamic blast physics,
+ *   and removing the hover smoothly returns particles to their original wavy orbits with damped spring physics.
  */
 export default function RingField({
-  colors = ["#2f6fe0", "#b8f3ff"],
-  backgroundColor = "transparent",
-  rings = 6,
-  particles = 22000,
-  thickness = 0.34,
-  folds = 3,
-  fold = 0.9,
-  dust = 0.14,
-  innerRadius = 0.38,
-  outerRadius = 1.25,
-  flow = "outward",
-  flowSpeed = 0.05,
-  morph = 0.13,
-  lobes = 3,
-  turbulence = 0.45,
-  sparkle = 0.06,
   className = "",
   style = {},
+  backgroundColor = "#04070b",
+  numRings = 6,
+  spinSpeed = 0.045, // Slow counter-clockwise rotation
+  expandSpeed = 12, // Slow outward expansion (pixels/sec)
+  blastRadius = 190, // Explosion influence radius
+  blastPower = 16, // Explosion impulse strength
+  springK = 0.048, // Return spring stiffness
+  friction = 0.88, // Return velocity damping
 }) {
   const canvasRef = useRef(null);
-  const mouseRef = useRef({ x: 0.5, y: 0.5, targetX: 0.5, targetY: 0.5 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -40,42 +37,121 @@ export default function RingField({
     let height = 0;
     let dpr = 1;
 
-    // Parse hex color to RGB
-    const hexToRgb = (hex) => {
-      let c = hex.replace("#", "");
-      if (c.length === 3) c = c.split("").map((x) => x + x).join("");
-      const num = parseInt(c, 16);
-      return {
-        r: (num >> 16) & 255,
-        g: (num >> 8) & 255,
-        b: num & 255,
-      };
+    // Track mouse & touch coordinates
+    const pointer = {
+      x: -9999,
+      y: -9999,
+      active: false,
+      lastMoved: 0,
     };
 
-    const colorOuter = hexToRgb(colors[0] || "#2f6fe0");
-    const colorInner = hexToRgb(colors[1] || "#b8f3ff");
+    // Responsive particle count
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    const totalParticles = isMobile ? 9500 : 16500;
 
-    // Pre-generate particle distribution
-    const count = Math.min(particles, 28000);
-    const particleData = new Float32Array(count * 5); // [ringIndex, baseAngle, radialOffset, speedFactor, isSparkle]
-
-    for (let i = 0; i < count; i++) {
-      const idx = i * 5;
-      const ringIdx = Math.floor(Math.random() * rings);
-      const angle = Math.random() * Math.PI * 2;
-      const isDust = Math.random() < dust;
-      const radialOffset = isDust
-        ? (Math.random() - 0.5) * 1.5
-        : (Math.random() - 0.5) * thickness;
-      const speedFactor = 0.85 + Math.random() * 0.3;
-      const isSparkle = Math.random() < sparkle ? 1 : 0;
-
-      particleData[idx] = ringIdx;
-      particleData[idx + 1] = angle;
-      particleData[idx + 2] = radialOffset;
-      particleData[idx + 3] = speedFactor;
-      particleData[idx + 4] = isSparkle;
+    // Define harmonic waveforms for each ring to ensure they are organic and non-circular
+    const ringConfigs = [];
+    for (let r = 0; r < numRings; r++) {
+      ringConfigs.push({
+        harmonicA: 0.08 + Math.random() * 0.12, // 2-lobe distortion
+        harmonicB: 0.05 + Math.random() * 0.09, // 3-lobe distortion
+        harmonicC: 0.03 + Math.random() * 0.06, // 5-lobe fine undulation
+        phase1: Math.random() * Math.PI * 2,
+        phase2: Math.random() * Math.PI * 2,
+        phase3: Math.random() * Math.PI * 2,
+        ringThickness: 14 + Math.random() * 16,
+        spinMultiplier: 0.85 + Math.random() * 0.3,
+      });
     }
+
+    // Particle state arrays
+    // Each particle: [currX, currY, vx, vy, ringIndex, angle, radialOffset, baseAlpha, twinkleSpeed, twinklePhase, size, colorType]
+    // Packed into Float32Array and Uint8Array for maximum 60-120fps performance
+    const posX = new Float32Array(totalParticles);
+    const posY = new Float32Array(totalParticles);
+    const velX = new Float32Array(totalParticles);
+    const velY = new Float32Array(totalParticles);
+    const ringIdx = new Uint8Array(totalParticles);
+    const angles = new Float32Array(totalParticles);
+    const radOffsets = new Float32Array(totalParticles);
+    const baseAlphas = new Float32Array(totalParticles);
+    const twinkleSpeeds = new Float32Array(totalParticles);
+    const twinklePhases = new Float32Array(totalParticles);
+    const sizes = new Float32Array(totalParticles);
+    const colorTypes = new Uint8Array(totalParticles); // 0: Cyan, 1: Diamond White, 2: Celestial Blue, 3: Gold/Amber, 4: Radiant Pink
+
+    // Pre-allocated ring base radii (will expand outwards)
+    const ringRadii = new Float32Array(numRings);
+
+    const initRingsAndParticles = () => {
+      const minDim = Math.min(width, height);
+      const minRadius = minDim * 0.16;
+      const maxRadius = minDim * 0.78;
+      const radiusStep = (maxRadius - minRadius) / numRings;
+
+      for (let r = 0; r < numRings; r++) {
+        ringRadii[r] = minRadius + r * radiusStep;
+      }
+
+      const centerX = width / 2;
+      const centerY = height / 2;
+
+      for (let i = 0; i < totalParticles; i++) {
+        const rIdx = Math.floor(Math.random() * numRings);
+        ringIdx[i] = rIdx;
+
+        // Angle around the ring
+        const theta = Math.random() * Math.PI * 2;
+        angles[i] = theta;
+
+        // Gaussian-like radial dispersion across the ring's ribbon
+        const u1 = Math.random() || 0.001;
+        const u2 = Math.random() || 0.001;
+        const normalRand = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+        radOffsets[i] = normalRand * (ringConfigs[rIdx].ringThickness * 0.5);
+
+        // Brightness and scintillation
+        baseAlphas[i] = 0.3 + Math.random() * 0.65;
+        twinkleSpeeds[i] = 1.2 + Math.random() * 3.8;
+        twinklePhases[i] = Math.random() * Math.PI * 2;
+
+        // 10% super sparkle particles (larger with diamond glow)
+        const isSuper = Math.random() < 0.1;
+        sizes[i] = isSuper ? 1.8 + Math.random() * 0.8 : 0.8 + Math.random() * 0.7;
+
+        // Color distributions matching Image 2
+        const colorRand = Math.random();
+        if (colorRand < 0.55) {
+          colorTypes[i] = 0; // Vibrant Electric Cyan (#67e8f9)
+        } else if (colorRand < 0.82) {
+          colorTypes[i] = 1; // Pure Diamond White (#f0f9ff)
+        } else if (colorRand < 0.94) {
+          colorTypes[i] = 2; // Ice Celestial Blue (#93c5fd)
+        } else if (colorRand < 0.97) {
+          colorTypes[i] = 3; // Golden amber accent speck (#fde047)
+        } else {
+          colorTypes[i] = 4; // Radiant pink accent speck (#f472b6)
+        }
+
+        // Calculate initial positions
+        const cfg = ringConfigs[rIdx];
+        const rBase = ringRadii[rIdx];
+        const wave =
+          1.0 +
+          cfg.harmonicA * Math.sin(2 * theta + cfg.phase1) +
+          cfg.harmonicB * Math.cos(3 * theta + cfg.phase2) +
+          cfg.harmonicC * Math.sin(5 * theta + cfg.phase3);
+        const finalR = rBase * wave + radOffsets[i];
+
+        const x = centerX + Math.cos(theta) * finalR;
+        const y = centerY + Math.sin(theta) * finalR;
+
+        posX[i] = x;
+        posY[i] = y;
+        velX[i] = 0;
+        velY[i] = 0;
+      }
+    };
 
     const resize = () => {
       const parent = canvas.parentElement || window;
@@ -89,95 +165,187 @@ export default function RingField({
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       ctx.scale(dpr, dpr);
+
+      initRingsAndParticles();
     };
 
     resize();
     window.addEventListener("resize", resize);
 
-    const handleMouseMove = (e) => {
+    // Pointer listeners on window so interaction works across the entire page
+    const handlePointerMove = (e) => {
       const rect = canvas.getBoundingClientRect();
-      if (!rect.width || !rect.height) return;
-      mouseRef.current.targetX = (e.clientX - rect.left) / rect.width;
-      mouseRef.current.targetY = (e.clientY - rect.top) / rect.height;
+      pointer.x = e.clientX - rect.left;
+      pointer.y = e.clientY - rect.top;
+      pointer.active = true;
+      pointer.lastMoved = performance.now();
     };
 
-    window.addEventListener("pointermove", handleMouseMove, { passive: true });
+    const handlePointerLeave = () => {
+      pointer.active = false;
+      pointer.x = -9999;
+      pointer.y = -9999;
+    };
 
-    let t = 0;
+    const handleTouchMove = (e) => {
+      if (e.touches && e.touches[0]) {
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        pointer.x = touch.clientX - rect.left;
+        pointer.y = touch.clientY - rect.top;
+        pointer.active = true;
+        pointer.lastMoved = performance.now();
+      }
+    };
 
-    const render = () => {
-      t += 0.016;
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    window.addEventListener("pointerleave", handlePointerLeave, { passive: true });
+    window.addEventListener("touchmove", handleTouchMove, { passive: true });
+    window.addEventListener("touchend", handlePointerLeave, { passive: true });
 
-      // Smooth pointer tracking
-      const m = mouseRef.current;
-      m.x += (m.targetX - m.x) * 0.05;
-      m.y += (m.targetY - m.y) * 0.05;
+    let lastTime = performance.now();
+    let ringGlobalAngle = 0;
 
-      const pointerOffsetX = (m.x - 0.5) * 40;
-      const pointerOffsetY = (m.y - 0.5) * 40;
+    // Render loop
+    const render = (now) => {
+      const dt = Math.min((now - lastTime) / 1000, 0.05); // Cap dt to avoid jump on tab switch
+      lastTime = now;
 
-      // Clear or paint background
-      if (backgroundColor && backgroundColor !== "transparent") {
-        ctx.fillStyle = backgroundColor;
-        ctx.fillRect(0, 0, width, height);
-      } else {
-        ctx.clearRect(0, 0, width, height);
+      // Deactivate mouse after 1.5 seconds of no movement
+      if (pointer.active && now - pointer.lastMoved > 1500) {
+        pointer.active = false;
       }
 
-      const centerX = width / 2 + pointerOffsetX;
-      const centerY = height / 2 + pointerOffsetY;
-      const baseRadius = Math.min(width, height) * 0.5;
+      // Draw background space
+      ctx.fillStyle = backgroundColor;
+      ctx.fillRect(0, 0, width, height);
 
-      const flowDir = flow === "inward" ? -1 : 1;
-      const ringCycle = t * flowSpeed * flowDir;
+      const centerX = width / 2;
+      const centerY = height / 2;
+      const minDim = Math.min(width, height);
+      const minRadius = minDim * 0.16;
+      const maxRadius = minDim * 0.82;
 
-      // Render fine dust particles
-      for (let i = 0; i < count; i++) {
-        const idx = i * 5;
-        const ringBase = particleData[idx];
-        const baseAngle = particleData[idx + 1];
-        const radialOffset = particleData[idx + 2];
-        const speed = particleData[idx + 3];
-        const isSparkle = particleData[idx + 4] === 1;
+      // 1. Update ring base radii (moving outwards slowly / getting bigger)
+      for (let r = 0; r < numRings; r++) {
+        ringRadii[r] += expandSpeed * dt;
+        if (ringRadii[r] > maxRadius) {
+          ringRadii[r] = minRadius + (ringRadii[r] - maxRadius);
+          // Gently mutate harmonic phases on respawn for natural evolving variation
+          ringConfigs[r].phase1 += 0.4;
+          ringConfigs[r].phase2 += 0.3;
+        }
+      }
 
-        // Progress of this particle's ring between inner and outer radius
-        let ringProgress = ((ringBase + ringCycle * speed) % rings) / rings;
-        if (ringProgress < 0) ringProgress += 1;
+      // 2. Slow anticlockwise spin
+      ringGlobalAngle -= spinSpeed * dt;
 
-        const currentRadiusNorm = innerRadius + ringProgress * (outerRadius - innerRadius);
-        const rCurrent = baseRadius * currentRadiusNorm;
+      const px = pointer.x;
+      const py = pointer.y;
+      const pActive = pointer.active;
+      const bRadSq = blastRadius * blastRadius;
 
-        // Wavy lobes distortion
-        const lobeWave = Math.sin(baseAngle * lobes + t * 0.4) * (morph * rCurrent);
-        const fineTurbulence = Math.sin(baseAngle * (lobes * 3) - t * 0.8) * (turbulence * 8);
+      // 3. Update & render each particle
+      for (let i = 0; i < totalParticles; i++) {
+        const rIdx = ringIdx[i];
+        const cfg = ringConfigs[rIdx];
+        const rBase = ringRadii[rIdx];
 
-        // Ribbon twist fold effect
-        const foldTwist = Math.sin(baseAngle * folds + t * 0.3) * fold;
-        const localRadial = radialOffset * (baseRadius / rings) * (0.3 + 0.7 * Math.abs(foldTwist));
+        // Particle's angle spinning anticlockwise
+        const curAngle = angles[i] + ringGlobalAngle * cfg.spinMultiplier;
 
-        const finalR = Math.max(0, rCurrent + lobeWave + fineTurbulence + localRadial);
-        const finalAngle = baseAngle + t * 0.02;
+        // Wavy organic ring radius at this angle (harmonic undulations)
+        const wave =
+          1.0 +
+          cfg.harmonicA * Math.sin(2 * curAngle + cfg.phase1) +
+          cfg.harmonicB * Math.cos(3 * curAngle + cfg.phase2) +
+          cfg.harmonicC * Math.sin(5 * curAngle + cfg.phase3);
 
-        const x = centerX + Math.cos(finalAngle) * finalR;
-        const y = centerY + Math.sin(finalAngle) * finalR;
+        const targetR = Math.max(10, rBase * wave + radOffsets[i]);
 
-        // Fade in at inner radius, fade out at outer edge
-        const edgeFade = Math.sin(ringProgress * Math.PI);
-        if (edgeFade <= 0.02) continue;
+        // Target orbital position on the rotating, expanding ring
+        const targetX = centerX + Math.cos(curAngle) * targetR;
+        const targetY = centerY + Math.sin(curAngle) * targetR;
 
-        const alpha = Math.min(1, Math.max(0, edgeFade * (isSparkle ? 0.95 : 0.65)));
+        // Interactive Explosion Force
+        let curX = posX[i];
+        let curY = posY[i];
+        let vx = velX[i];
+        let vy = velY[i];
 
-        // Interpolate color from inner to outer
-        const rColor = Math.round(colorInner.r + (colorOuter.r - colorInner.r) * ringProgress);
-        const gColor = Math.round(colorInner.g + (colorOuter.g - colorInner.g) * ringProgress);
-        const bColor = Math.round(colorInner.b + (colorOuter.b - colorInner.b) * ringProgress);
+        if (pActive) {
+          const dxMouse = curX - px;
+          const dyMouse = curY - py;
+          const distSq = dxMouse * dxMouse + dyMouse * dyMouse;
 
-        ctx.fillStyle = isSparkle
-          ? `rgba(255, 255, 255, ${alpha})`
-          : `rgba(${rColor}, ${gColor}, ${bColor}, ${alpha * 0.7})`;
+          if (distSq < bRadSq && distSq > 0.1) {
+            const dist = Math.sqrt(distSq);
+            const ratio = 1 - dist / blastRadius;
+            const force = ratio * ratio * blastPower;
 
-        const pSize = isSparkle ? 1.8 : 1.1;
-        ctx.fillRect(x, y, pSize, pSize);
+            // Explosion impulses: push particles radially away from mouse + slight cosmic scatter
+            const scatter = (Math.sin(i * 13.7) - 0.5) * 2;
+            vx += (dxMouse / dist) * force + scatter;
+            vy += (dyMouse / dist) * force - scatter;
+          }
+        }
+
+        // Restoring Spring Physics: smoothly return to original orbital position
+        const dxTarget = targetX - curX;
+        const dyTarget = targetY - curY;
+
+        vx += dxTarget * springK;
+        vy += dyTarget * springK;
+
+        // Friction / velocity damping
+        vx *= friction;
+        vy *= friction;
+
+        curX += vx;
+        curY += vy;
+
+        posX[i] = curX;
+        posY[i] = curY;
+        velX[i] = vx;
+        velY[i] = vy;
+
+        // Fade in when expanding from center, fade out near outer boundary
+        let edgeAlpha = 1.0;
+        if (rBase < minRadius + 50) {
+          edgeAlpha = Math.max(0, (rBase - minRadius) / 50);
+        } else if (rBase > maxRadius - 70) {
+          edgeAlpha = Math.max(0, (maxRadius - rBase) / 70);
+        }
+
+        if (edgeAlpha <= 0.02) continue;
+
+        // Twinkling sparkle modulation
+        const twinkle = Math.sin(now * 0.001 * twinkleSpeeds[i] + twinklePhases[i]);
+        const alpha = Math.min(1, Math.max(0, baseAlphas[i] * (0.68 + 0.32 * twinkle) * edgeAlpha));
+
+        const size = sizes[i];
+        const cType = colorTypes[i];
+
+        // Draw stardust particle with appropriate color
+        if (cType === 0) {
+          ctx.fillStyle = `rgba(103, 232, 249, ${alpha})`; // Cyan
+        } else if (cType === 1) {
+          ctx.fillStyle = `rgba(240, 249, 255, ${alpha})`; // Diamond White
+        } else if (cType === 2) {
+          ctx.fillStyle = `rgba(147, 197, 253, ${alpha * 0.9})`; // Celestial Blue
+        } else if (cType === 3) {
+          ctx.fillStyle = `rgba(253, 224, 71, ${alpha * 0.95})`; // Amber Gold
+        } else {
+          ctx.fillStyle = `rgba(244, 114, 182, ${alpha * 0.95})`; // Radiant Pink
+        }
+
+        ctx.fillRect(curX, curY, size, size);
+
+        // Additional soft radial glow for larger sparkling stars
+        if (size > 1.8 && alpha > 0.45) {
+          ctx.fillStyle = `rgba(255, 255, 255, ${alpha * 0.28})`;
+          ctx.fillRect(curX - 1, curY - 1, size + 2, size + 2);
+        }
       }
 
       animId = requestAnimationFrame(render);
@@ -188,25 +356,20 @@ export default function RingField({
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener("resize", resize);
-      window.removeEventListener("pointermove", handleMouseMove);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerleave", handlePointerLeave);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handlePointerLeave);
     };
   }, [
-    colors,
     backgroundColor,
-    rings,
-    particles,
-    thickness,
-    folds,
-    fold,
-    dust,
-    innerRadius,
-    outerRadius,
-    flow,
-    flowSpeed,
-    morph,
-    lobes,
-    turbulence,
-    sparkle,
+    numRings,
+    spinSpeed,
+    expandSpeed,
+    blastRadius,
+    blastPower,
+    springK,
+    friction,
   ]);
 
   return (
@@ -218,4 +381,5 @@ export default function RingField({
     />
   );
 }
+
 export { RingField };
