@@ -127,6 +127,26 @@ export default function FileShare() {
     setTimeout(() => setCopied(false), 2500);
   };
 
+  const handleDirectTestDownload = async (e) => {
+    e.preventDefault();
+    if (!shareData?.downloadUrl) return;
+    try {
+      const fullUrl = buildApiUrl(shareData.downloadUrl);
+      const res = await fetch(fullUrl);
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = shareData.originalName || "download";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
+    } catch {
+      window.location.href = buildApiUrl(shareData.downloadUrl);
+    }
+  };
+
   const resetUploader = () => {
     setFile(null);
     setShareData(null);
@@ -364,8 +384,9 @@ export default function FileShare() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
               <a
                 href={buildApiUrl(shareData.downloadUrl)}
+                onClick={handleDirectTestDownload}
                 download={shareData.originalName}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-sm transition shadow-lg shadow-emerald-500/20"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-sm transition shadow-lg shadow-emerald-500/20 cursor-pointer"
               >
                 <DownloadSimple size={18} weight="bold" />
                 <span>Test Direct Download</span>

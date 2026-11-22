@@ -79,6 +79,26 @@ export default function MetadataRemover() {
     }
   };
 
+  const handleDownload = async (e) => {
+    e.preventDefault();
+    if (!stripResult?.downloadUrl) return;
+    try {
+      const fullUrl = buildApiUrl(stripResult.downloadUrl);
+      const res = await fetch(fullUrl);
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = stripResult.filename || "sanitized-file";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
+    } catch {
+      window.location.href = buildApiUrl(stripResult.downloadUrl);
+    }
+  };
+
   const reset = () => {
     setFile(null);
     setInspectData(null);
@@ -243,8 +263,9 @@ export default function MetadataRemover() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
               <a
                 href={buildApiUrl(stripResult.downloadUrl)}
+                onClick={handleDownload}
                 download={stripResult.filename}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-sm transition shadow-lg shadow-emerald-500/20"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-sm transition shadow-lg shadow-emerald-500/20 cursor-pointer"
               >
                 <DownloadSimple size={18} weight="bold" />
                 <span>Download Anonymized File</span>

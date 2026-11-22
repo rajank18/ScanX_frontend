@@ -66,6 +66,26 @@ export default function Redact() {
     }
   };
 
+  const handleDownload = async (e) => {
+    e.preventDefault();
+    if (!result?.downloadUrl) return;
+    try {
+      const fullUrl = buildApiUrl(result.downloadUrl);
+      const res = await fetch(fullUrl);
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = result.filename || "redacted-document";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
+    } catch {
+      window.location.href = buildApiUrl(result.downloadUrl);
+    }
+  };
+
   const reset = () => {
     setFile(null);
     setResult(null);
@@ -287,8 +307,9 @@ export default function Redact() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
               <a
                 href={buildApiUrl(result.downloadUrl)}
+                onClick={handleDownload}
                 download={result.filename}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-sm transition shadow-lg shadow-emerald-500/20"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-sm transition shadow-lg shadow-emerald-500/20 cursor-pointer"
               >
                 <DownloadSimple size={18} weight="bold" />
                 <span>Download Redacted File</span>
