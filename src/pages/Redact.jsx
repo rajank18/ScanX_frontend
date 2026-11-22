@@ -2,6 +2,7 @@ import { useState } from "react";
 import SEO from "@/components/SEO";
 import UnifiedDropzone from "@/components/ui/UnifiedDropzone";
 import PageInfoSection from "@/components/PageInfoSection";
+import { apiFetch, buildApiUrl } from "@/lib/api";
 import {
   ShieldCheck,
   EyeSlash,
@@ -48,7 +49,7 @@ export default function Redact() {
     formData.append("redactionMode", redactMode);
 
     try {
-      const response = await fetch("http://localhost:5000/redact/process", {
+      const response = await apiFetch("/redact/process", {
         method: "POST",
         body: formData,
       });
@@ -285,7 +286,7 @@ export default function Redact() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
               <a
-                href={`http://localhost:5000${result.downloadUrl}`}
+                href={buildApiUrl(result.downloadUrl)}
                 download={result.filename}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-sm transition shadow-lg shadow-emerald-500/20"
               >

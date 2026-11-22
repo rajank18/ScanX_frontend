@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import SEO from "@/components/SEO";
 import UnifiedDropzone from "@/components/ui/UnifiedDropzone";
 import PageInfoSection from "@/components/PageInfoSection";
+import { apiFetch, buildApiUrl } from "@/lib/api";
 import {
   ShareNetwork,
   CloudArrowUp,
@@ -42,7 +43,7 @@ export default function FileShare() {
       setIsLoadingRecipient(true);
       setRecipientError(null);
       try {
-        const res = await fetch(`http://localhost:5000/share/info/${shareId}`);
+        const res = await apiFetch(`/share/info/${shareId}`);
         const data = await res.json();
         if (!res.ok) {
           throw new Error(data.error || "File not found or expired.");
@@ -52,7 +53,7 @@ export default function FileShare() {
 
           // Automatically trigger download with zero hassle
           setTimeout(() => {
-            const downloadUrl = `http://localhost:5000/share/download/${shareId}`;
+            const downloadUrl = buildApiUrl(`/share/download/${shareId}`);
             const link = document.createElement("a");
             link.href = downloadUrl;
             link.download = data.originalName;
@@ -99,7 +100,7 @@ export default function FileShare() {
 
     try {
       setUploadProgress(50);
-      const res = await fetch("http://localhost:5000/share/upload", {
+      const res = await apiFetch("/share/upload", {
         method: "POST",
         body: formData,
       });
@@ -190,7 +191,7 @@ export default function FileShare() {
 
             <div className="space-y-3">
               <a
-                href={`http://localhost:5000/share/download/${shareId}`}
+                href={buildApiUrl(`/share/download/${shareId}`)}
                 download={recipientFile.originalName}
                 className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-sm transition shadow-lg shadow-emerald-500/20"
               >
@@ -362,7 +363,7 @@ export default function FileShare() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
               <a
-                href={`http://localhost:5000${shareData.downloadUrl}`}
+                href={buildApiUrl(shareData.downloadUrl)}
                 download={shareData.originalName}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-sm transition shadow-lg shadow-emerald-500/20"
               >
