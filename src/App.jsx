@@ -48,7 +48,10 @@ function App() {
           {/* Desktop nav */}
           <nav className="hidden md:flex gap-3 text-sm md:text-base text-white/80">
             <Link className="hover:text-white" to="/convertor">Convertors</Link>
-            <Link className="hover:text-white" to="/colab-to-pdf">Colab Link to PDF</Link>
+            <Link className="hover:text-white" to="/colab-to-pdf">Colab to PDF</Link>
+            <Link className="hover:text-white" to="/redact">Redact</Link>
+            <Link className="hover:text-white" to="/share">File Share</Link>
+            <Link className="hover:text-white" to="/metadata-remover">Anonymize</Link>
             <Link className="hover:text-white" to="/scan">Doc Enhancer</Link>
             <Link className="hover:text-white" to="/compress">Compressor</Link>
             <Link className="hover:text-white" to="/merge-pdf">Merge PDFs</Link>
@@ -59,8 +62,11 @@ function App() {
           {isMenuOpen && (
             <div className="absolute top-full left-0 right-0 bg-black/90 border-b border-white/10 md:hidden">
               <nav className="flex flex-col gap-2 p-4 text-sm text-white/80">
+                <Link className="hover:text-white py-1" to="/redact" onClick={() => setIsMenuOpen(false)}>PII Redactor</Link>
+                <Link className="hover:text-white py-1" to="/share" onClick={() => setIsMenuOpen(false)}>File Share (100MB)</Link>
+                <Link className="hover:text-white py-1" to="/metadata-remover" onClick={() => setIsMenuOpen(false)}>Metadata & AI Stripper</Link>
                 <Link className="hover:text-white py-1" to="/compress" onClick={() => setIsMenuOpen(false)}>Compressor</Link>
-                <Link className="hover:text-white py-1" to="/colab-to-pdf" onClick={() => setIsMenuOpen(false)}>Colab Link to PDF</Link>
+                <Link className="hover:text-white py-1" to="/colab-to-pdf" onClick={() => setIsMenuOpen(false)}>Colab to PDF</Link>
                 <Link className="hover:text-white py-1" to="/scan" onClick={() => setIsMenuOpen(false)}>Doc Enhancer</Link>
                 <Link className="hover:text-white py-1" to="/merge-pdf" onClick={() => setIsMenuOpen(false)}>Merge PDFs</Link>
                 <Link className="hover:text-white py-1" to="/viewer" onClick={() => setIsMenuOpen(false)}>Viewer</Link>

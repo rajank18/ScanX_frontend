@@ -8,6 +8,9 @@ import {
   FileArchive,
   Files,
   FileCode,
+  ShieldCheck,
+  ShareNetwork,
+  Eraser,
 } from "@phosphor-icons/react";
 import PageInfoSection from "@/components/PageInfoSection";
 import MicroSlats from "@/components/ui/MicroSlats";
@@ -123,6 +126,24 @@ export default function Home() {
             title="Colab Link to PDF"
             subtitle="Google Colab Link → PDF"
             icon={<FileCode size={32} weight="duotone" className="text-white" />}
+          />
+          <FeatureCard
+            to="/redact"
+            title="PII Redactor"
+            subtitle="Mask Aadhaar, PAN & PII"
+            icon={<ShieldCheck size={32} weight="duotone" className="text-white" />}
+          />
+          <FeatureCard
+            to="/share"
+            title="File Sharer (100MB)"
+            subtitle="Direct link, zero hassle"
+            icon={<ShareNetwork size={32} weight="duotone" className="text-white" />}
+          />
+          <FeatureCard
+            to="/metadata-remover"
+            title="Metadata & AI Stripper"
+            subtitle="Purge EXIF, GPS & AI tags"
+            icon={<Eraser size={32} weight="duotone" className="text-white" />}
           />
         </div>
 

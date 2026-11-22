@@ -20,6 +20,9 @@ import PngToJpg from './pages/convertor/PngToJpg.jsx'
 import ExcelToPdf from './pages/convertor/ExcelToPdf.jsx'
 import PdfToExcel from './pages/convertor/PdfToExcel.jsx'
 import ColabToPdf from './pages/convertor/ColabToPdf.jsx'
+import Redact from './pages/Redact.jsx'
+import FileShare from './pages/FileShare.jsx'
+import MetadataRemover from './pages/MetadataRemover.jsx'
 
 const router = createBrowserRouter([
   {
@@ -36,6 +39,10 @@ const router = createBrowserRouter([
       { path: 'convertor', element: <Convertor /> },
       { path: 'viewer', element: <UltimateViewer /> },
       { path: 'colab-to-pdf', element: <ColabToPdf /> },
+      { path: 'redact', element: <Redact /> },
+      { path: 'share', element: <FileShare /> },
+      { path: 'share/:shareId', element: <FileShare /> },
+      { path: 'metadata-remover', element: <MetadataRemover /> },
       { path: 'convertor/image-to-pdf', element: <ImageToPdf /> },
       { path: 'convertor/word-to-pdf', element: <WordToPdf /> },
       { path: 'convertor/pdf-to-word', element: <PdfToWord /> },
