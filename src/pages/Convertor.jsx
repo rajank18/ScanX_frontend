@@ -6,11 +6,6 @@ import PageInfoSection from "@/components/PageInfoSection";
 
 const conversionOptions = [
   {
-    title: "Google Colab Link to PDF",
-    description: "Convert Google Colab share links or notebook files to clean PDF.",
-    link: "/colab-to-pdf"
-  },
-  {
     title: "Image to PDF",
     description: "Convert images (JPG, PNG, etc.) to a single PDF file.",
     link: "/convertor/image-to-pdf"
