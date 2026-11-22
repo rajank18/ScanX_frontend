@@ -39,16 +39,16 @@ export default function Redact() {
     setIsProcessing(true);
     setError(null);
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("redactAadhaar", redactAadhaar);
-    formData.append("redactPan", redactPan);
-    formData.append("redactEmail", redactEmail);
-    formData.append("redactPhone", redactPhone);
-    formData.append("customKeywords", customKeywords);
-    formData.append("redactionMode", redactMode);
-
     try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("redactAadhaar", redactAadhaar);
+      formData.append("redactPan", redactPan);
+      formData.append("redactEmail", redactEmail);
+      formData.append("redactPhone", redactPhone);
+      formData.append("customKeywords", customKeywords);
+      formData.append("redactionMode", redactionMode);
+
       const response = await apiFetch("/redact/process", {
         method: "POST",
         body: formData,
