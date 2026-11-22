@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { UploadSimple, FileArrowUp, Image as ImageIcon, Files } from "@phosphor-icons/react";
+import { UploadSimple, FileArrowUp, Image as ImageIcon, Files, Camera } from "@phosphor-icons/react";
 
 /**
  * UnifiedDropzone Component
@@ -15,9 +15,18 @@ export default function UnifiedDropzone({
   iconType = "upload", // "upload" | "file" | "image" | "files"
   className = "",
   id = "unified-dropzone-input",
+  showCamera = false,
 }) {
   const fileInputRef = useRef(null);
+  const cameraInputRef = useRef(null);
   const [isDragOver, setIsDragOver] = useState(false);
+
+  const shouldShowCamera = showCamera || (
+    Boolean(accept && accept.includes("image")) && (
+      title.toLowerCase().includes("take photo") || 
+      title.toLowerCase().includes("photo")
+    )
+  );
 
   const handleFiles = (fileList) => {
     if (!fileList || fileList.length === 0) return;
@@ -80,6 +89,7 @@ export default function UnifiedDropzone({
           : "border-emerald-500/30 hover:border-emerald-400 hover:bg-emerald-950/20 bg-emerald-950/10"
       } ${className}`}
     >
+      {/* Standard file picker input */}
       <input
         ref={fileInputRef}
         type="file"
@@ -89,6 +99,19 @@ export default function UnifiedDropzone({
         onChange={(e) => handleFiles(e.target.files)}
         className="hidden"
       />
+
+      {/* Direct camera capture input for mobile devices */}
+      {shouldShowCamera && (
+        <input
+          ref={cameraInputRef}
+          type="file"
+          id={`${id}-camera`}
+          accept="image/*"
+          capture="environment"
+          onChange={(e) => handleFiles(e.target.files)}
+          className="hidden"
+        />
+      )}
 
       <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center mb-3 group-hover:scale-105 group-hover:bg-emerald-500/20 group-hover:border-emerald-400/50 transition-all duration-300 shadow-inner pointer-events-none">
         {renderIcon()}
@@ -102,6 +125,24 @@ export default function UnifiedDropzone({
         <p className="text-xs sm:text-sm text-white/50 mt-1 max-w-sm pointer-events-none">
           {subtitle}
         </p>
+      )}
+
+      {/* Direct mobile camera action button */}
+      {shouldShowCamera && (
+        <div className="mt-3.5 z-10">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              cameraInputRef.current?.click();
+            }}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-500/15 hover:bg-emerald-500/25 active:bg-emerald-500/35 text-emerald-300 border border-emerald-500/30 text-xs font-semibold transition-all shadow-sm hover:scale-105 active:scale-95 cursor-pointer"
+          >
+            <Camera size={16} weight="duotone" className="text-emerald-400" />
+            <span>Take Photo with Camera</span>
+          </button>
+        </div>
       )}
     </label>
   );
