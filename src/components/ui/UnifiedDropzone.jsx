@@ -39,6 +39,7 @@ export default function UnifiedDropzone({
   const handleDragLeave = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    if (e.currentTarget.contains(e.relatedTarget)) return;
     setIsDragOver(false);
   };
 
@@ -46,7 +47,7 @@ export default function UnifiedDropzone({
     e.preventDefault();
     e.stopPropagation();
     setIsDragOver(false);
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       handleFiles(e.dataTransfer.files);
     }
   };
@@ -69,12 +70,13 @@ export default function UnifiedDropzone({
   return (
     <label
       htmlFor={id}
+      onDragEnter={handleDragOver}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       className={`group relative border-2 border-dashed rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-200 select-none block ${
         isDragOver
-          ? "border-emerald-400 bg-emerald-500/15 scale-[1.01]"
+          ? "border-emerald-400 bg-emerald-500/20 scale-[1.01] shadow-lg shadow-emerald-500/10 ring-2 ring-emerald-400/40"
           : "border-emerald-500/30 hover:border-emerald-400 hover:bg-emerald-950/20 bg-emerald-950/10"
       } ${className}`}
     >
@@ -88,16 +90,16 @@ export default function UnifiedDropzone({
         className="hidden"
       />
 
-      <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center mb-3 group-hover:scale-105 group-hover:bg-emerald-500/20 group-hover:border-emerald-400/50 transition-all duration-300 shadow-inner">
+      <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center mb-3 group-hover:scale-105 group-hover:bg-emerald-500/20 group-hover:border-emerald-400/50 transition-all duration-300 shadow-inner pointer-events-none">
         {renderIcon()}
       </div>
 
-      <div className="text-base sm:text-lg font-semibold text-white group-hover:text-emerald-300 transition-colors">
+      <div className="text-base sm:text-lg font-semibold text-white group-hover:text-emerald-300 transition-colors pointer-events-none">
         {title}
       </div>
 
       {subtitle && (
-        <p className="text-xs sm:text-sm text-white/50 mt-1 max-w-sm">
+        <p className="text-xs sm:text-sm text-white/50 mt-1 max-w-sm pointer-events-none">
           {subtitle}
         </p>
       )}

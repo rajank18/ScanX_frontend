@@ -87,7 +87,18 @@ export default function JpgToPng() {
         keywords="jpg to png, jpeg to png, convert jpg to png, image converter, online converter"
         canonical="/convertor/jpg-to-png"
       />
-      <div className="w-full max-w-2xl mx-auto text-gray-100 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#0d1614]/90 text-center shadow-2xl">
+      <div 
+        onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+        onDrop={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const dropped = e.dataTransfer?.files?.[0];
+          if (dropped) {
+            handleImageSelect({ target: { files: [dropped] } });
+          }
+        }}
+        className="w-full max-w-2xl mx-auto text-gray-100 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#0d1614]/90 text-center shadow-2xl"
+      >
         <h2 className="text-2xl md:text-3xl font-bold mb-2">JPG to PNG</h2>
         <p className="text-white/60 mb-6 text-sm">
           Upload a JPG/JPEG image to convert it to PNG format with transparency support.

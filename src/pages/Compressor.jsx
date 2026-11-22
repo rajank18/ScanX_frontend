@@ -231,12 +231,21 @@ export default function Compressor() {
         canonical="/compress"
       />
 
-      <div className="w-full max-w-2xl mx-auto text-gray-100 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#0d1614]/90 text-center shadow-2xl">
+      <div 
+        onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+        onDrop={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const dropped = e.dataTransfer?.files?.[0];
+          if (dropped) handleFileProcess(dropped);
+        }}
+        className="w-full max-w-2xl mx-auto text-gray-100 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#0d1614]/90 text-center shadow-2xl"
+      >
         {/* Header */}
         <div className="mb-6">
-          <span className="inline-block px-3 py-1 mb-2 text-xs font-semibold tracking-wider uppercase bg-emerald-500/20 text-emerald-300 rounded-full border border-emerald-400/30">
+          {/* <span className="inline-block px-3 py-1 mb-2 text-xs font-semibold tracking-wider uppercase bg-emerald-500/20 text-emerald-300 rounded-full border border-emerald-400/30">
             All-in-One Optimization
-          </span>
+          </span> */}
           <h1 className="text-3xl md:text-4xl font-bold mb-2">Universal Compressor</h1>
           <p className="text-white/60 max-w-xl mx-auto text-sm md:text-base">
             Compress PDF documents and images (JPG, PNG, WebP) in one place with intelligent quality retention.
@@ -270,11 +279,10 @@ export default function Compressor() {
                       {file.name}
                     </span>
                     <span
-                      className={`text-xs px-2 py-0.5 rounded font-semibold ${
-                        fileType === "pdf"
+                      className={`text-xs px-2 py-0.5 rounded font-semibold ${fileType === "pdf"
                           ? "bg-red-500/20 text-red-300 border border-red-500/30"
                           : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                      }`}
+                        }`}
                     >
                       {fileType === "pdf" ? "PDF" : "IMAGE"}
                     </span>
@@ -335,11 +343,10 @@ export default function Compressor() {
                       setCompressedBlobUrl(null);
                       setCompressedSize(null);
                     }}
-                    className={`text-xs px-3 py-1 rounded-full transition border ${
-                      quality === preset.val
+                    className={`text-xs px-3 py-1 rounded-full transition border ${quality === preset.val
                         ? "bg-emerald-600 text-white border-emerald-500"
                         : "bg-white/5 text-white/70 border-white/10 hover:bg-white/10"
-                    }`}
+                      }`}
                   >
                     {preset.label}
                   </button>

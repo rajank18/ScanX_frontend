@@ -19,10 +19,11 @@ export default function ColabToPdf() {
     };
   }, [pdfBlobUrl]);
 
-  const handleFileSelect = (e) => {
-    const selected = e.target.files?.[0];
+  const handleFileSelect = (fileOrEvent) => {
+    const selected = fileOrEvent?.target?.files?.[0] || (fileOrEvent instanceof File || fileOrEvent instanceof Blob ? fileOrEvent : null);
     if (selected) {
       setFile(selected);
+      setActiveTab("upload");
       setPdfBlobUrl(null);
       setErrorMessage("");
     }
@@ -111,7 +112,18 @@ export default function ColabToPdf() {
         canonical="/colab-to-pdf"
       />
 
-      <div className="w-full max-w-2xl mx-auto text-gray-100 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#0d1614]/90 text-center shadow-2xl">
+      <div 
+        onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+        onDrop={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const dropped = e.dataTransfer?.files?.[0];
+          if (dropped) {
+            handleFileSelect(dropped);
+          }
+        }}
+        className="w-full max-w-2xl mx-auto text-gray-100 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#0d1614]/90 text-center shadow-2xl"
+      >
         <h2 className="text-2xl md:text-3xl font-bold mb-2">Google Colab Link to PDF</h2>
         <p className="text-white/60 mb-6 text-sm">
           Convert Google Colab notebooks or .ipynb files into clean, styled PDFs.
@@ -161,7 +173,7 @@ export default function ColabToPdf() {
         {activeTab === "upload" && (
           <div className="mb-6">
             <UnifiedDropzone
-              onFileSelect={handleFileSelect}
+              onFileSelect={(f) => handleFileSelect(f)}
               accept=".ipynb,.py,application/x-ipynb+json,text/x-python"
               title="Choose .ipynb or .py File"
               subtitle="Select a Jupyter Notebook or Python file to convert"

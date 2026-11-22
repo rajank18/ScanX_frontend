@@ -157,7 +157,17 @@ export default function ImageToPdf() {
         keywords="image to pdf, jpg to pdf, png to pdf, convert images to pdf, pictures to pdf, photos to pdf, online image converter"
         canonical="/convertor/image-to-pdf"
       />
-      <div className="w-full max-w-2xl mx-auto text-gray-100 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#0d1614]/90 text-center shadow-2xl">
+      <div 
+        onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+        onDrop={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            handleImageSelect(Array.from(e.dataTransfer.files));
+          }
+        }}
+        className="w-full max-w-2xl mx-auto text-gray-100 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#0d1614]/90 text-center shadow-2xl"
+      >
         <h2 className="text-2xl md:text-3xl font-bold mb-2">Image to PDF</h2>
         <p className="text-white/60 mb-6 text-sm">Upload one or more images (any format) to convert them into a single PDF file. Drag to reorder.</p>
         <ImageUpload onImageSelect={handleImageSelect} />

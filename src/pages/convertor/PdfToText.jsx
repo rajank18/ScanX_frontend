@@ -63,7 +63,18 @@ export default function PdfToText() {
         keywords="pdf to text, extract text from pdf, pdf text extractor, convert pdf to text, online converter"
         canonical="/convertor/pdf-to-text"
       />
-      <div className="w-full max-w-2xl mx-auto text-gray-100 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#0d1614]/90 text-center shadow-2xl">
+      <div 
+        onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+        onDrop={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const dropped = e.dataTransfer?.files?.[0];
+          if (dropped) {
+            handleFileSelect({ target: { files: [dropped] } });
+          }
+        }}
+        className="w-full max-w-2xl mx-auto text-gray-100 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#0d1614]/90 text-center shadow-2xl"
+      >
         <h2 className="text-2xl md:text-3xl font-bold mb-2">PDF to Text</h2>
         <p className="text-white/60 mb-6 text-sm">Upload a PDF file to extract all text content as a plain text file.</p>
         
